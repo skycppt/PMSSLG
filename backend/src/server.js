@@ -7,6 +7,7 @@ import User from "./models/User.js";
 import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import publicationRoutes from "./routes/publicationRoutes.js";
+import subscriptionRoutes from "./routes/subscriptionRoutes.js";
 
 dotenv.config();
 
@@ -20,6 +21,7 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/publications",publicationRoutes);
+app.use("/api/subscriptions", subscriptionRoutes );
 
 // app.get("/create-user", async (req, res) => {
 //   try {

@@ -23,3 +23,27 @@ export const createPublication = async (
 
   }
 };
+
+export const getAllPublications = async (
+  req,
+  res
+) => {
+  try {
+
+    const publications =
+      await Publication.find({
+        isActive: true,
+      });
+
+    res.status(200).json(
+      publications
+    );
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
