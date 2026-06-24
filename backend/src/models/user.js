@@ -9,7 +9,7 @@ const membershipSchema = new mongoose.Schema({
 
   duration: {
     type: String,
-    enum: ["6 Months", "1 Year", "3 Year"],
+    enum: ["3 Months","6 Months", "1 Year", "3 Year"],
     default: "6 Months",
   },
 
