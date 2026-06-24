@@ -130,3 +130,83 @@ export const createSubscription =
 
     }
   };
+
+
+  export const renewSubscription =
+  async (req, res) => {
+    try {
+
+      const { duration } = req.body;
+
+      const subscription =
+        await Subscription.findById(
+          req.params.id
+        );
+
+      if (!subscription) {
+        return res.status(404).json({
+          message:
+            "Subscription not found",
+        });
+      }
+
+      let amountPaid = 0;
+
+      const publication =
+        await Publication.findById(
+          subscription.publication
+        );
+
+      if (!publication) {
+        return res.status(404).json({
+          message:
+            "Publication not found",
+        });
+      }
+
+      const newEndDate =
+        new Date(subscription.endDate);
+
+      if (duration === "6 Months") {
+
+        amountPaid =
+          publication.price6Months;
+
+        newEndDate.setMonth(
+          newEndDate.getMonth() + 6
+        );
+
+      } else {
+
+        amountPaid =
+          publication.price1Year;
+
+        newEndDate.setFullYear(
+          newEndDate.getFullYear() + 1
+        );
+      }
+
+      subscription.endDate =
+        newEndDate;
+
+      subscription.amountPaid +=
+        amountPaid;
+
+      await subscription.save();
+
+      res.status(200).json({
+        message:
+          "Subscription renewed successfully",
+
+        subscription,
+      });
+
+    } catch (error) {
+
+      res.status(500).json({
+        message:
+          error.message,
+      });
+
+    }
+  };

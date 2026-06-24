@@ -22,4 +22,5 @@ router.post(
   createPublication
 );
 
+
 export default router;
