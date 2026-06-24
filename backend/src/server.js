@@ -6,6 +6,7 @@ import connectDB from "./config/db.js";
 import User from "./models/User.js";
 import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
+import publicationRoutes from "./routes/publicationRoutes.js";
 
 dotenv.config();
 
@@ -18,6 +19,7 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
+app.use("/api/publications",publicationRoutes);
 
 // app.get("/create-user", async (req, res) => {
 //   try {
