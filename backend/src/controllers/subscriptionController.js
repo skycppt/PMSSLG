@@ -100,3 +100,33 @@ export const createSubscription =
 
     }
   };
+
+
+  export const getMySubscriptions =
+  async (req, res) => {
+    try {
+
+      const subscriptions =
+        await Subscription.find({
+          user: req.user._id,
+        })
+        .populate(
+          "publication",
+          "name language frequency coverImage"
+        )
+        .sort({
+          createdAt: -1,
+        });
+
+      res.status(200).json(
+        subscriptions
+      );
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: error.message,
+      });
+
+    }
+  };
