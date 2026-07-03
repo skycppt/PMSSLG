@@ -48,9 +48,9 @@ app.use("/api/payments", paymentRoutes);
 //   }
 // });
 
-app.get("/",(req,res)=>{
-  res.send("Publication managment system API Running");
-})
+// app.get("/",(req,res)=>{
+//   res.send("Publication managment system API Running");
+// })
 
 const PORT = process.env.PORT || 5000;
 
