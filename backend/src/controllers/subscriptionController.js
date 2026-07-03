@@ -1,5 +1,7 @@
 import Subscription from "../models/Subscription.js";
 import Publication from "../models/Publication.js";
+import SubscriptionPayment
+from "../models/SubscriptionPayment.js";
 
 export const createSubscription =
   async (req, res) => {
@@ -82,6 +84,26 @@ export const createSubscription =
           amountPaid,
 
           status: "Active",
+        });
+
+        await SubscriptionPayment.create({
+          subscription:
+            subscription._id,
+
+          user:
+            req.user._id,
+
+          publication:
+            publication._id,
+
+          amount:
+            amountPaid,
+
+          paymentType:
+            "New Subscription",
+
+          paymentMethod:
+            "Cash",
         });
 
       res.status(201).json({
@@ -193,6 +215,26 @@ export const createSubscription =
         amountPaid;
 
       await subscription.save();
+
+      await SubscriptionPayment.create({
+        subscription:
+          subscription._id,
+
+        user:
+          subscription.user,
+
+        publication:
+          subscription.publication,
+
+        amount:
+          amountPaid,
+
+        paymentType:
+          "Renewal",
+
+        paymentMethod:
+          "Cash",
+      });
 
       res.status(200).json({
         message:
