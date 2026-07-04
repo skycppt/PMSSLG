@@ -1,6 +1,7 @@
 import BookSale from "../models/BookSale.js";
 import Book from "../models/book.js";
 import StockHistory from "../models/StockHistory.js";
+import { createInvoice } from "./invoiceService.js";
 
 export const createSaleService = async (
   customer,
@@ -67,5 +68,16 @@ export const createSaleService = async (
     paymentMethod,
   });
 
-  return sale;
+  const invoice = await createInvoice(
+    sale,
+    soldBy
+  );
+
+  return {
+
+    sale,
+
+    invoice,
+
+};
 };

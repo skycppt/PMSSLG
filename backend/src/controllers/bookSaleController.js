@@ -1,30 +1,31 @@
+import asyncHandler from "express-async-handler";
 import { createSaleService } from "../services/bookSaleService.js";
+import { saleSchema } from "../validators/saleValidator.js";
 
-export const createBookSale = async (req, res) => {
+export const createBookSale = asyncHandler(async (req, res) => {
 
-  try {
+    const { error, value } = saleSchema.validate(req.body, {
+    abortEarly: false,
+    stripUnknown: true,
+});
 
-    const { customer, items, paymentMethod } =
-      req.body;
+    if (error) {
+      throw new Error(error.details[0].message);
+    }
 
-    const sale = await createSaleService(
-      customer,
-      items,
-      paymentMethod,
-      req.user._id
+    const { customer, items, paymentMethod } = req.body;
+
+    const result = await createSaleService(
+        customer,
+        items,
+        paymentMethod,
+        req.user._id
     );
 
-    return res.status(201).json({
-      message: "Book Sale Created Successfully",
-      sale,
+    res.status(201).json({
+        success: true,
+        message: "Sale completed successfully",
+        data: result,
     });
 
-  } catch (error) {
-
-    return res.status(400).json({
-      message: error.message,
-    });
-
-  }
-
-};
+});

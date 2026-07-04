@@ -10,10 +10,33 @@ import publicationRoutes from "./routes/publicationRoutes.js";
 import subscriptionRoutes from "./routes/subscriptionRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
 import bookSaleRoutes from "./routes/bookSaleRoutes.js";
+import {notFound,errorHandler,} from "./middleware/errorMiddleware.js";
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./config/swagger.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
+import helmet from "helmet";
+import compression from "compression";
+import rateLimit from "express-rate-limit";
+
 
 dotenv.config();
 
 connectDB();
+const limiter = rateLimit({
+
+    windowMs: 15 * 60 * 1000,
+
+    max: 100,
+
+    message: {
+
+        success: false,
+
+        message: "Too many requests. Please try again later."
+
+    }
+
+});
 
 const app = express();
 
@@ -24,8 +47,14 @@ app.get("/", (req, res) => {
     version: "1.0.0",
   });
 });
-
-app.use(cors());
+app.use(limiter);
+app.use(helmet());
+app.use(compression());
+app.use(cors({origin: [
+            "http://localhost:5173"
+            ],credentials: true,
+    })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
@@ -34,6 +63,12 @@ app.use("/api/publications",publicationRoutes);
 app.use("/api/subscriptions", subscriptionRoutes );
 app.use("/api/payments", paymentRoutes);
 app.use("/api/book-sales", bookSaleRoutes);
+app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerSpec));
+app.use("/api/dashboard",dashboardRoutes);
+
+app.use(notFound);
+app.use(errorHandler);
+
 
 // app.get("/create-user", async (req, res) => {
 //   try {
