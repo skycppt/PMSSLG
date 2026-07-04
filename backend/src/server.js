@@ -1,5 +1,4 @@
 import express from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import morgan from "morgan";
 import connectDB from "./config/db.js";
@@ -17,9 +16,8 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
+import env from "./config/env.js";
 
-
-dotenv.config();
 
 connectDB();
 const limiter = rateLimit({
@@ -68,26 +66,6 @@ app.use("/api/dashboard",dashboardRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
-
-
-// app.get("/create-user", async (req, res) => {
-//   try {
-//     const user = await User.create({
-//       fullName: "Sujit Kumar",
-//       email: "sujit@gmail.com",
-//       password: "123456",
-//     });
-
-//     res.json(user);
-//   } catch (error) {
-//     console.log(error);
-//     res.json(error.message);
-//   }
-// });
-
-// app.get("/",(req,res)=>{
-//   res.send("Publication managment system API Running");
-// })
 
 const PORT = process.env.PORT || 5000;
 
