@@ -9,6 +9,7 @@ import bookRoutes from "./routes/bookRoutes.js";
 import publicationRoutes from "./routes/publicationRoutes.js";
 import subscriptionRoutes from "./routes/subscriptionRoutes.js";
 import paymentRoutes from "./routes/paymentRoutes.js";
+import bookSaleRoutes from "./routes/bookSaleRoutes.js";
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ app.use("/api/books", bookRoutes);
 app.use("/api/publications",publicationRoutes);
 app.use("/api/subscriptions", subscriptionRoutes );
 app.use("/api/payments", paymentRoutes);
+app.use("/api/book-sales", bookSaleRoutes);
 
 // app.get("/create-user", async (req, res) => {
 //   try {
