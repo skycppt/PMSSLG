@@ -2,24 +2,51 @@ import express from "express";
 
 import {
   createSubscription,
-  getMySubscriptions,
+  getAllSubscriptions,
+  getSubscriptionById,
+  updateSubscription,
+  cancelSubscription,
   renewSubscription,
+  getMemberSubscriptions,
 } from "../controllers/subscriptionController.js";
 
 import protect from "../middleware/authMiddleware.js";
 
 const router = express.Router();
+router.get(
+  "/",
+  protect,
+  getAllSubscriptions
+);
 
 router.get(
-  "/my-subscriptions",
+  "/:id",
   protect,
-  getMySubscriptions
+  getSubscriptionById
+);
+
+router.get(
+  "/member/:memberId",
+  protect,
+  getMemberSubscriptions
 );
 
 router.post(
   "/",
   protect,
   createSubscription
+);
+
+router.put(
+  "/:id",
+  protect,
+  updateSubscription
+);
+
+router.put(
+  "/:id/cancel",
+  protect,
+  cancelSubscription
 );
 
 router.post(

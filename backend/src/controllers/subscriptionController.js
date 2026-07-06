@@ -8,13 +8,14 @@ export const createSubscription =
     try {
 
       const {
-        publicationId,
-        duration,
+          memberId,
+          publicationId,
+          duration,
       } = req.body;
 
       const existingSubscription =
         await Subscription.findOne({
-          user: req.user._id,
+          member: memberId,
           publication: publicationId,
           status: "Active",
         });
@@ -70,7 +71,7 @@ export const createSubscription =
 
       const subscription =
         await Subscription.create({
-          user: req.user._id,
+          member: memberId,
 
           publication:
             publication._id,
@@ -87,24 +88,18 @@ export const createSubscription =
         });
 
         await SubscriptionPayment.create({
-          subscription:
-            subscription._id,
+        subscription: subscription._id,
 
-          user:
-            req.user._id,
+        member: memberId,
 
-          publication:
-            publication._id,
+        publication: publication._id,
 
-          amount:
-            amountPaid,
+        amount: amountPaid,
 
-          paymentType:
-            "New Subscription",
+        paymentType: "New Subscription",
 
-          paymentMethod:
-            "Cash",
-        });
+        paymentMethod: "Cash",
+      });
 
       res.status(201).json({
         message:
@@ -123,36 +118,35 @@ export const createSubscription =
     }
   };
 
+  export const getAllSubscriptions = async (req, res) => {
+  try {
 
-  export const getMySubscriptions =
-  async (req, res) => {
-    try {
+    const subscriptions = await Subscription.find()
 
-      const subscriptions =
-        await Subscription.find({
-          user: req.user._id,
-        })
-        .populate(
-          "publication",
-          "name language frequency coverImage"
-        )
-        .sort({
-          createdAt: -1,
-        });
+      .populate(
+        "member",
+        "memberId fullName phone"
+      )
 
-      res.status(200).json(
-        subscriptions
-      );
+      .populate(
+        "publication",
+        "name language frequency"
+      )
 
-    } catch (error) {
-
-      res.status(500).json({
-        message: error.message,
+      .sort({
+        createdAt: -1,
       });
 
-    }
-  };
+    res.status(200).json(subscriptions);
 
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
 
   export const renewSubscription =
   async (req, res) => {
@@ -189,24 +183,31 @@ export const createSubscription =
       const newEndDate =
         new Date(subscription.endDate);
 
-      if (duration === "6 Months") {
+      if (duration === "3 Months") {
 
-        amountPaid =
-          publication.price6Months;
+          amountPaid = publication.price3Months;
 
-        newEndDate.setMonth(
-          newEndDate.getMonth() + 6
-        );
+          endDate.setMonth(
+            endDate.getMonth() + 3
+          );
 
-      } else {
+        } else if (duration === "6 Months") {
 
-        amountPaid =
-          publication.price1Year;
+          amountPaid = publication.price6Months;
 
-        newEndDate.setFullYear(
-          newEndDate.getFullYear() + 1
-        );
-      }
+          endDate.setMonth(
+            endDate.getMonth() + 6
+          );
+
+        } else {
+
+          amountPaid = publication.price1Year;
+
+          endDate.setFullYear(
+            endDate.getFullYear() + 1
+          );
+
+        }
 
       subscription.endDate =
         newEndDate;
@@ -220,8 +221,8 @@ export const createSubscription =
         subscription:
           subscription._id,
 
-        user:
-          subscription.user,
+        member:
+          subscription.member,
 
         publication:
           subscription.publication,
@@ -251,4 +252,134 @@ export const createSubscription =
       });
 
     }
+  };
+
+  export const getSubscriptionById = async (req, res) => {
+  try {
+
+    const subscription = await Subscription.findById(req.params.id)
+
+      .populate(
+        "member",
+        "memberId fullName phone email"
+      )
+
+      .populate(
+        "publication",
+        "name language frequency"
+      );
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    res.status(200).json(subscription);
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+export const updateSubscription = async (req, res) => {
+  try {
+
+    const subscription = await Subscription.findById(
+      req.params.id
+    );
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    Object.assign(subscription, req.body);
+
+    await subscription.save();
+
+    res.status(200).json({
+      message: "Subscription updated successfully",
+      subscription,
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+
+export const cancelSubscription = async (req, res) => {
+  try {
+
+    const subscription = await Subscription.findById(
+      req.params.id
+    );
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    subscription.status = "Cancelled";
+
+    await subscription.save();
+
+    res.status(200).json({
+      message: "Subscription cancelled successfully",
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+
+export const getMemberSubscriptions =
+  async (req, res) => {
+
+    try {
+
+      const subscriptions =
+        await Subscription.find({
+
+          member: req.params.memberId,
+
+        })
+
+        .populate(
+          "publication",
+          "name language frequency"
+        )
+
+        .sort({
+          createdAt: -1,
+        });
+
+      res.status(200).json(
+        subscriptions
+      );
+
+    } catch (error) {
+
+      res.status(500).json({
+        message: error.message,
+      });
+
+    }
+
   };

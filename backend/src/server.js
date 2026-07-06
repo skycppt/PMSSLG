@@ -17,6 +17,7 @@ import helmet from "helmet";
 import compression from "compression";
 import rateLimit from "express-rate-limit";
 import env from "./config/env.js";
+import memberRoutes from "./routes/memberRoutes.js";
 
 
 connectDB();
@@ -58,6 +59,7 @@ app.use(morgan("dev"));
 app.use("/api/auth", authRoutes);
 app.use("/api/books", bookRoutes);
 app.use("/api/publications",publicationRoutes);
+app.use("/api/members", memberRoutes);
 app.use("/api/subscriptions", subscriptionRoutes );
 app.use("/api/payments", paymentRoutes);
 app.use("/api/book-sales", bookSaleRoutes);

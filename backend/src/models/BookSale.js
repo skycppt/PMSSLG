@@ -1,57 +1,17 @@
 import mongoose from "mongoose";
 
-const saleItemSchema = new mongoose.Schema(
-  {
-    book: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Book",
-      required: true,
-    },
-
-    quantity: {
-      type: Number,
-      required: true,
-      min: 1,
-    },
-
-    unitPrice: {
-      type: Number,
-      required: true,
-    },
-
-    subtotal: {
-      type: Number,
-      required: true,
-    },
-  },
-  {
-    _id: false,
-  }
-);
-
 const bookSaleSchema = new mongoose.Schema(
   {
-    customer: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      default: null,
+    invoiceNo: {
+      type: String,
+      required: true,
+      unique: true,
     },
 
-    soldBy: {
+    member: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Member",
       required: true,
-    },
-
-    items: {
-      type: [saleItemSchema],
-      required: true,
-      validate: {
-        validator: function (items) {
-          return items.length > 0;
-        },
-        message: "At least one book is required.",
-      },
     },
 
     totalAmount: {
@@ -62,14 +22,34 @@ const bookSaleSchema = new mongoose.Schema(
 
     paymentMethod: {
       type: String,
-      enum: ["Cash", "UPI", "Card"],
+      enum: [
+        "Cash",
+        "UPI",
+        "Card",
+        "Bank Transfer",
+      ],
       default: "Cash",
     },
 
-    saleStatus: {
+    paymentStatus: {
       type: String,
-      enum: ["Completed", "Cancelled"],
-      default: "Completed",
+      enum: [
+        "Paid",
+        "Pending",
+        "Cancelled",
+      ],
+      default: "Paid",
+    },
+
+    soldBy: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    saleDate: {
+      type: Date,
+      default: Date.now,
     },
   },
   {
@@ -77,6 +57,9 @@ const bookSaleSchema = new mongoose.Schema(
   }
 );
 
-const BookSale = mongoose.model("BookSale", bookSaleSchema);
+const BookSale = mongoose.model(
+  "BookSale",
+  bookSaleSchema
+);
 
 export default BookSale;

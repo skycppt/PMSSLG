@@ -3,11 +3,11 @@ import mongoose from "mongoose";
 const subscriptionSchema =
   new mongoose.Schema(
     {
-      user: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
+      member: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Member",
+          required: true,
+        },
 
       publication: {
         type: mongoose.Schema.Types.ObjectId,
@@ -18,6 +18,7 @@ const subscriptionSchema =
       duration: {
         type: String,
         enum: [
+          "3 Months",
           "6 Months",
           "1 Year",
         ],
