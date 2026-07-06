@@ -87,19 +87,17 @@ export const createSubscription =
           status: "Active",
         });
 
+      
+
         await SubscriptionPayment.create({
-        subscription: subscription._id,
-
-        member: memberId,
-
-        publication: publication._id,
-
-        amount: amountPaid,
-
-        paymentType: "New Subscription",
-
-        paymentMethod: "Cash",
-      });
+          subscription: subscription._id,
+          member: memberId,
+          processedBy: req.user._id,
+          publication: publication._id,
+          amount: amountPaid,
+          paymentType: "New Subscription",
+          paymentMethod: "Cash",
+        });
 
       res.status(201).json({
         message:
@@ -218,24 +216,14 @@ export const createSubscription =
       await subscription.save();
 
       await SubscriptionPayment.create({
-        subscription:
-          subscription._id,
-
-        member:
-          subscription.member,
-
-        publication:
-          subscription.publication,
-
-        amount:
-          amountPaid,
-
-        paymentType:
-          "Renewal",
-
-        paymentMethod:
-          "Cash",
-      });
+          subscription: subscription._id,
+          member: memberId,
+          processedBy: req.user._id,
+          publication: publication._id,
+          amount: amountPaid,
+          paymentType: "New Subscription",
+          paymentMethod: "Cash",
+        });
 
       res.status(200).json({
         message:

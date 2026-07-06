@@ -9,7 +9,13 @@ const subscriptionPaymentSchema =
         required: true,
       },
 
-      user: {
+      member: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Member",
+        required: true,
+      },
+
+      processedBy: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "User",
         required: true,
