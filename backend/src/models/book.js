@@ -8,12 +8,6 @@ const bookSchema = new mongoose.Schema(
       trim: true,
     },
 
-    isbn: {
-      type: String,
-      required: true,
-      unique: true,
-    },
-
     author: {
       type: String,
       required: true,
@@ -24,23 +18,15 @@ const bookSchema = new mongoose.Schema(
       required: true,
     },
 
-    publicationDate: {
-      type: Date,
+    language: {
+      type: String,
+      required: true,
     },
-
-    genre: [
-      {
+    
+    genre: {
         type: String,
+        required: true,
       },
-    ],
-
-    synopsis: {
-      type: String,
-    },
-
-    authorBio: {
-      type: String,
-    },
 
     stockQuantity: {
       type: Number,
@@ -58,10 +44,6 @@ const bookSchema = new mongoose.Schema(
       type: Number,
       required: true,
       min: 0,
-    },
-
-    coverImageUrl: {
-      type: String,
     },
 
     lowStockAlert: {
