@@ -63,8 +63,16 @@ function Sidebar() {
           Publications
         </NavLink>
 
+
+          <NavLink
+            to="/members"
+            className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-100"
+          >
+            <FaUsers />
+            Members
+          </NavLink>
         <NavLink
-          to="/dashboard"
+          to="/subscriptions"
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -78,7 +86,7 @@ function Sidebar() {
         </NavLink>
         
         <NavLink
-          to="/dashboard"
+          to="/sales"
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -91,22 +99,10 @@ function Sidebar() {
           Book Sales
         </NavLink>
 
-        <NavLink
-          to="/dashboard"
-          className={({ isActive }) =>
-            `flex items-center gap-3 p-3 rounded-lg transition ${
-              isActive
-                ? "bg-white text-blue-700 font-semibold"
-                : "hover:bg-blue-600"
-            }`
-          }
-        >
-          <FaFileInvoice />
-          Invoices
-        </NavLink>
+        
 
         <NavLink
-          to="/dashboard"
+          to="/reports"
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive

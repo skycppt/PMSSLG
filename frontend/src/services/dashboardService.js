@@ -1,13 +1,33 @@
+// import api from "../api/axios";
+
+// export const getDashboardData = async () => {
+//   const token = localStorage.getItem("token");
+
+//   const response = await api.get("/dashboard", {
+//     headers: {
+//       Authorization: `Bearer ${token}`,
+//     },
+//   });
+
+//   return response.data;
+// };
+
+
 import api from "../api/axios";
 
-export const getDashboardData = async () => {
-  const token = localStorage.getItem("token");
+const getAuthConfig = () => ({
+  headers: {
+    Authorization: `Bearer ${localStorage.getItem("token")}`,
+  },
+});
 
-  const response = await api.get("/dashboard", {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
+export const getDashboard = async () => {
 
-  return response.data;
+  const response = await api.get(
+    "/dashboard",
+    getAuthConfig()
+  );
+
+  return response.data.data;
+
 };
