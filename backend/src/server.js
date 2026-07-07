@@ -18,6 +18,7 @@ import compression from "compression";
 import rateLimit from "express-rate-limit";
 import env from "./config/env.js";
 import memberRoutes from "./routes/memberRoutes.js";
+import reportRoutes from "./routes/reportRoutes.js";
 
 
 connectDB();
@@ -65,6 +66,7 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/book-sales", bookSaleRoutes);
 app.use("/api-docs",swaggerUi.serve,swaggerUi.setup(swaggerSpec));
 app.use("/api/dashboard",dashboardRoutes);
+app.use("/api/reports",reportRoutes);
 
 app.use(notFound);
 app.use(errorHandler);
