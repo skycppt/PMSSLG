@@ -29,36 +29,39 @@ export async function getDashboardSummary() {
 
     return {
 
-        books: {
+            books: {
 
-            ...overview.books,
+                ...overview.books,
 
-            ...inventory.books
+                ...inventory.books
 
-        },
+            },
 
-        publications:
-            overview.publications,
+            members:
+                overview.members,
 
-        subscriptions:
-            overview.subscriptions,
+            publications:
+                overview.publications,
 
-        sales: {
+            subscriptions:
+                overview.subscriptions,
 
-            ...revenue.sales,
+            sales: {
 
-            ...recentSales.sales
+                ...revenue.sales,
 
-        },
+                ...recentSales.sales
 
-        analytics: {
+            },
 
-            bestSellingBooks
+            analytics: {
 
-        },
+                bestSellingBooks
 
-        expiringSubscriptions
+            },
 
-    };
+            expiringSubscriptions
+
+        };
 
 }

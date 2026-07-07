@@ -1,10 +1,16 @@
 import Book from "../../models/book.js";
 import Publication from "../../models/Publication.js";
 import Subscription from "../../models/Subscription.js";
+import Member from "../../models/Member.js";
 
 export async function getOverviewCards() {
 
     const totalBooks = await Book.countDocuments();
+
+    const totalMembers =
+        await Member.countDocuments({
+            status: "Active",
+        });
 
     const totalPublications =
         await Publication.countDocuments();
@@ -18,6 +24,10 @@ export async function getOverviewCards() {
 
         books: {
             totalBooks
+        },
+
+        members: {
+            totalMembers,
         },
 
         publications: {
