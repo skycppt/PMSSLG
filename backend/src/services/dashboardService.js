@@ -5,6 +5,7 @@ import { getRevenueStats } from "./dashboard/revenueService.js";
 import { getInventoryStats } from "./dashboard/inventoryService.js";
 import { getRecentSales } from "./dashboard/recentSalesService.js";
 import { getBestSellingBooks } from "./dashboard/analyticsService.js";
+import { getExpiringSubscriptions } from "./dashboard/expiringSubscriptionService.js";
 
 export async function getDashboardSummary() {
 
@@ -22,6 +23,9 @@ export async function getDashboardSummary() {
 
     const bestSellingBooks =
         await getBestSellingBooks();
+
+    const expiringSubscriptions =
+        await getExpiringSubscriptions();
 
     return {
 
@@ -51,7 +55,9 @@ export async function getDashboardSummary() {
 
             bestSellingBooks
 
-        }
+        },
+
+        expiringSubscriptions
 
     };
 
