@@ -50,10 +50,16 @@ app.get("/", (req, res) => {
 app.use(limiter);
 app.use(helmet());
 app.use(compression());
-app.use(cors({origin: [
-            "http://localhost:5173"
-            ],credentials: true,
-    })
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      "https://pmsslg.vercel.app",
+      "https://pmsslg-a0i9ctl66-pmsslg.vercel.app",
+      /^https:\/\/.*\.vercel\.app$/,
+    ],
+    credentials: true,
+  })
 );
 app.use(express.json());
 app.use(morgan("dev"));
