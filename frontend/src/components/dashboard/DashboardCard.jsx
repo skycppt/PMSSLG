@@ -5,6 +5,7 @@ import {
   FaClipboardList,
   FaRupeeSign,
 } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 
 function DashboardCard({
@@ -15,7 +16,11 @@ value,
 
 color,
 
+route,
+
 }){
+
+  const navigate = useNavigate();
 
   const cardConfig = {
 
@@ -66,7 +71,7 @@ color,
  return (
 
     <div
-
+      onClick={() => navigate(route)}
       className={`${config.bg} rounded-xl shadow p-5 hover:shadow-lg transition duration-300 cursor-pointer`}
 
     >

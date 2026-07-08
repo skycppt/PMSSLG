@@ -9,6 +9,7 @@ import ViewSaleModal from "../components/sales/ViewSaleModal";
 
 import { getSaleById } from "../services/saleService";
 import { generateInvoicePDF } from "../utils/invoiceGenerator";
+import { useSearchParams } from "react-router-dom";
 
 function Sales() {
 
@@ -17,7 +18,23 @@ function Sales() {
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [viewSale,setViewSale]=useState(null);
-  // const [whatsappSale, setWhatsappSale] = seState(null);
+  const [searchParams] = useSearchParams();
+
+  useEffect(() => {
+
+  const filter = searchParams.get("filter");
+
+  if (filter === "today") {
+
+    const today = new Date()
+      .toISOString()
+      .split("T")[0];
+
+    setDateFilter(today);
+
+  }
+
+}, [searchParams]);
 
   const [showModal, setShowModal] =
     useState(false);
