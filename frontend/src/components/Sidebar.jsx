@@ -7,22 +7,67 @@ import {
   FaFileInvoice,
   FaChartBar,
   FaAddressBook,
+  FaTimes,
 } from "react-icons/fa";
 
 import { NavLink } from "react-router-dom";
 
-function Sidebar() {
-  return (
-    <aside className="w-64 bg-blue-700 text-white min-h-screen p-5">
+function Sidebar({
 
-      <h1 className="text-2xl font-bold mb-10">
-        PMS
-      </h1>
+  isOpen,
+
+  setIsOpen,
+
+})  {
+  return (
+    <aside
+  className={`
+    fixed lg:static
+    top-0 left-0
+    z-50
+    w-64
+    h-screen
+    bg-blue-700
+    text-white
+    p-5
+    transform
+    transition-transform
+    duration-300
+    ${
+      isOpen
+        ? "translate-x-0"
+        : "-translate-x-full lg:translate-x-0"
+    }
+  `}
+>
+
+      <div className="flex justify-between items-center mb-10">
+
+<h1 className="text-2xl font-bold">
+
+PMS
+
+</h1>
+
+<button
+
+onClick={()=>setIsOpen(false)}
+
+className="lg:hidden text-2xl"
+
+>
+
+<FaTimes/>
+
+</button>
+
+</div>
 
       <nav className="space-y-5">
 
         <NavLink
           to="/dashboard"
+          onClick={()=>setIsOpen(false)}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -37,6 +82,7 @@ function Sidebar() {
 
         <NavLink
           to="/books"
+          onClick={()=>setIsOpen(false)}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -51,6 +97,7 @@ function Sidebar() {
 
         <NavLink
           to="/publications"
+          onClick={()=>setIsOpen(false)}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -66,6 +113,7 @@ function Sidebar() {
 
           <NavLink
             to="/members"
+            onClick={()=>setIsOpen(false)}
             className="flex items-center gap-3 p-3 rounded-lg hover:bg-blue-100"
           >
             <FaUsers />
@@ -73,6 +121,7 @@ function Sidebar() {
           </NavLink>
         <NavLink
           to="/subscriptions"
+          onClick={()=>setIsOpen(false)}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -87,6 +136,7 @@ function Sidebar() {
         
         <NavLink
           to="/sales"
+          onClick={()=>setIsOpen(false)}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
@@ -103,6 +153,7 @@ function Sidebar() {
 
         <NavLink
           to="/reports"
+          onClick={()=>setIsOpen(false)}
           className={({ isActive }) =>
             `flex items-center gap-3 p-3 rounded-lg transition ${
               isActive
