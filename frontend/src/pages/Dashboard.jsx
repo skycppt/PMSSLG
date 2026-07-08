@@ -64,47 +64,59 @@ function Dashboard() {
 
     <div>
 
-      <div className="mb-8">
+      <div className="p-4 sm:p-6 lg:p-8">
 
-        <h1 className="text-4xl font-bold">
+  {/* Header */}
 
-          Dashboard
+  <div className="mb-6 sm:mb-8">
 
-        </h1>
+    <h1 className="text-3xl sm:text-4xl font-bold">
 
-        <p className="text-gray-500 mt-2">
+      Dashboard
 
-          Welcome to Sant Nirankari Publication Management System
+    </h1>
 
-        </p>
+    <p className="text-gray-500 mt-2 text-sm sm:text-base">
 
-      </div>
+      Welcome to Sant Nirankari Publication Management System
 
-      <SummaryCards
-        data={dashboard}
-      />
+    </p>
 
-      <div className="grid grid-cols-2 gap-6 mt-8">
+  </div>
 
-        <LowStockBooks
-          books={dashboard.books.lowStockList}
-        />
+  {/* Summary Cards */}
 
-        <RecentSales
-          sales={dashboard.sales.recentSales}
-        />
+  <SummaryCards
+    data={dashboard}
+  />
 
-      </div>
+  {/* Low Stock + Recent Sales */}
 
-      <div className="mt-8">
+  <div className="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-8">
 
-        <ExpiringSubscriptions
-          subscriptions={
-            dashboard.expiringSubscriptions
-          }
-        />
+    <LowStockBooks
+      books={dashboard.books.lowStockList}
+    />
 
-      </div>
+    <RecentSales
+      sales={dashboard.sales.recentSales}
+    />
+
+  </div>
+
+  {/* Expiring Subscriptions */}
+
+  <div className="mt-8">
+
+    <ExpiringSubscriptions
+      subscriptions={
+        dashboard.expiringSubscriptions
+      }
+    />
+
+  </div>
+
+</div>
 
     </div>
 
