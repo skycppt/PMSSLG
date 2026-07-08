@@ -1,77 +1,120 @@
 function LowStockBooks({
 
-books,
+  books,
 
-}){
+}) {
 
-return(
+  return (
 
-<div className="bg-white rounded-xl shadow p-6">
+    <div className="bg-white rounded-xl shadow p-4 sm:p-6">
 
-<h2 className="text-xl font-semibold mb-5">
+      <div className="flex justify-between items-center mb-5">
 
-Low Stock Books
+        <h2 className="text-lg sm:text-xl font-semibold">
 
-</h2>
+          Low Stock Books
 
-<table className="w-full">
+        </h2>
 
-<thead>
+        <span className="text-sm text-gray-500">
 
-<tr>
+          {books.length} Books
 
-<th className="text-left">
+        </span>
 
-Book
+      </div>
 
-</th>
+      <div className="overflow-x-auto">
 
-<th>
+        <table className="min-w-full">
 
-Stock
+          <thead>
 
-</th>
+            <tr className="border-b">
 
-</tr>
+              <th className="text-left py-3 text-sm font-semibold">
 
-</thead>
+                Book
 
-<tbody>
+              </th>
 
-{books.map(book=>(
+              <th className="text-center py-3 text-sm font-semibold">
 
-<tr
-key={book._id}
-className="border-b"
->
+                Stock
 
-<td className="py-3">
+              </th>
 
-{book.title}
+            </tr>
 
-</td>
+          </thead>
 
-<td className="text-center">
+          <tbody>
 
-<span className="bg-red-100 text-red-700 px-3 py-1 rounded-full">
+            {books.length > 0 ? (
 
-{book.stockQuantity}
+              books.map((book) => (
 
-</span>
+                <tr
 
-</td>
+                  key={book._id}
 
-</tr>
+                  className="border-b hover:bg-gray-50"
 
-))}
+                >
 
-</tbody>
+                  <td className="py-3 pr-4">
 
-</table>
+                    <p className="font-medium text-sm sm:text-base">
 
-</div>
+                      {book.title}
 
-);
+                    </p>
+
+                  </td>
+
+                  <td className="text-center">
+
+                    <span className="inline-block bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-semibold">
+
+                      {book.stockQuantity}
+
+                    </span>
+
+                  </td>
+
+                </tr>
+
+              ))
+
+            ) : (
+
+              <tr>
+
+                <td
+
+                  colSpan="2"
+
+                  className="py-6 text-center text-gray-500"
+
+                >
+
+                  No low stock books.
+
+                </td>
+
+              </tr>
+
+            )}
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+    </div>
+
+  );
 
 }
 

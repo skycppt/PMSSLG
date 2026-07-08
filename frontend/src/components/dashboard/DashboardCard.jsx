@@ -67,7 +67,7 @@ color,
 
     <div
 
-      className={`${config.bg} rounded-xl shadow p-6 hover:shadow-lg transition duration-300 cursor-pointer`}
+      className={`${config.bg} rounded-xl shadow p-5 hover:shadow-lg transition duration-300 cursor-pointer`}
 
     >
 
@@ -81,7 +81,7 @@ color,
 
           </p>
 
-          <h2 className="text-4xl font-bold mt-3">
+          <h2 className="text-3xl font-bold mt-3">
 
             {value}
 
