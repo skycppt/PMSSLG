@@ -17,6 +17,7 @@ function Sales() {
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState("");
   const [viewSale,setViewSale]=useState(null);
+  // const [whatsappSale, setWhatsappSale] = seState(null);
 
   const [showModal, setShowModal] =
     useState(false);
@@ -172,11 +173,45 @@ onPrint={async (sale) => {
 
 }}
 
-onCancel={(sale)=>{
+onWhatsapp={(sale)=>{
 
-console.log("Cancel",sale);
+const phone =
+sale.member.phone.replace(/\D/g,"");
+
+const message =
+`🙏🏻 Dhan Nirankar Ji 🙏🏻
+
+Dear ${sale.member.fullName},
+
+Thank you for purchasing from Sant Nirankari Publication.
+
+Invoice No : ${sale.invoiceNo}
+
+Amount : ₹${sale.totalAmount}
+
+Payment Method : ${sale.paymentMethod}
+
+Your purchase has been recorded successfully.
+
+Regards,
+Sant Nirankari Mission
+Siliguri Zone`;
+
+window.open(
+
+`https://wa.me/91${phone}?text=${encodeURIComponent(message)}`,
+
+"_blank"
+
+);
 
 }}
+
+// onCancel={(sale)=>{
+
+// console.log("Cancel",sale);
+
+// }}
 
 />
 

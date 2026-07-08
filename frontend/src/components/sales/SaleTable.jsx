@@ -2,7 +2,9 @@ import {
   FaEye,
   FaPrint,
   FaBan,
+  FaWhatsapp,
 } from "react-icons/fa";
+
 
 function SaleTable({
 
@@ -13,6 +15,8 @@ function SaleTable({
   onPrint,
 
   onCancel,
+
+  onWhatsapp,
 
 }) {
 
@@ -113,35 +117,55 @@ function SaleTable({
 
               <td className="p-4">
 
-                <div className="flex gap-4">
+                  <div className="flex justify-center gap-3">
 
                   <button
-                    onClick={() => onView(sale)}
-                    className="text-blue-600 hover:text-blue-800"
-                    title="View"
+
+                  onClick={()=>onView(sale)}
+
+                  className="text-blue-600 hover:text-blue-800"
+
+                  title="View"
+
                   >
-                    <FaEye />
+
+                  <FaEye/>
+
                   </button>
 
                   <button
-                    onClick={() => onPrint(sale)}
-                    className="text-green-600 hover:text-green-800"
-                    title="Print"
+
+                  onClick={()=>onPrint(sale)}
+
+                  className="text-green-600 hover:text-green-800"
+
+                  title="Download Invoice"
+
                   >
-                    <FaPrint />
+
+                  <FaPrint/>
+
                   </button>
 
                   <button
-                    onClick={() => onCancel(sale)}
-                    className="text-red-600 hover:text-red-800"
-                    title="Cancel"
+
+                  onClick={()=>onWhatsapp(sale)}
+
+                  className="text-green-500 hover:text-green-700"
+
+                  title="Share on WhatsApp"
+
                   >
-                    <FaBan />
+
+                  <FaWhatsapp/>
+
                   </button>
+                  
 
-                </div>
 
-              </td>
+                  </div>
+
+                  </td>
 
             </tr>
 

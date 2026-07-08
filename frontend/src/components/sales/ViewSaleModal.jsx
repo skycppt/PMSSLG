@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { getSaleById } from "../../services/saleService";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
+import { FaWhatsapp } from "react-icons/fa";
 
 
 // import Invoice from "./Invoice";
@@ -54,6 +55,38 @@ function ViewSaleModal({
     }
 
   };
+  const handleWhatsApp = () => {
+
+        // Remove spaces or special characters from phone number
+        const phone = details.member.phone.replace(/\D/g, "");
+
+        const message = ` Dhan Nirankar Ji 
+
+      Dear ${details.member.fullName},
+
+      Thank you for purchasing from Sant Nirankari Publication.
+
+      Invoice No : ${details.invoiceNo}
+
+      Amount : ₹${details.totalAmount}
+
+      Payment Method : ${details.paymentMethod}
+
+      Your purchase has been recorded successfully.
+
+      Regards,
+      Sant Nirankari Mission
+      Siliguri Zone`;
+
+        window.open(
+
+          `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`,
+
+          "_blank"
+
+        );
+
+      };
 
   if (loading) {
 
