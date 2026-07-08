@@ -181,9 +181,9 @@ sale.member.phone.replace(/\D/g,"");
 const message =
 `🙏🏻 Dhan Nirankar Ji 🙏🏻
 
-Dear ${sale.member.fullName},
+Rev. ${sale.member.fullName} Ji,
 
-Thank you for purchasing from Sant Nirankari Publication.
+Thank you for purchasing from Sant Nirankari Publication, Siliguri.
 
 Invoice No : ${sale.invoiceNo}
 
