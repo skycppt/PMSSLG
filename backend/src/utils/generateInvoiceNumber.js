@@ -1,12 +1,23 @@
-const generateInvoiceNumber = () => {
+import Counter from "../models/Counter.js";
 
-    const year = new Date().getFullYear();
+export const generateInvoiceNumber = async () => {
 
-    const random = Math.floor(
-        100000 + Math.random() * 900000
+    console.log("generateInvoiceNumber called");
+
+    const counter = await Counter.findByIdAndUpdate(
+        "invoice",
+        {
+            $inc: {
+                sequenceValue: 1,
+            },
+        },
+        {
+            new: true,
+            upsert: true,
+        }
     );
 
-    return `INV-${year}-${random}`;
-};
+    console.log("Counter:", counter);
 
-export default generateInvoiceNumber;
+    return "INV" + String(counter.sequenceValue).padStart(6, "0");
+};

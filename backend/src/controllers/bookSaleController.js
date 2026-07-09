@@ -3,6 +3,7 @@ import BookSaleItem from "../models/BookSaleItem.js";
 import Book from "../models/book.js";
 import Member from "../models/Member.js";
 import StockHistory from "../models/StockHistory.js";
+import { generateInvoiceNumber } from "../utils/generateInvoiceNumber.js";
 
 
 // ======================================
@@ -18,8 +19,6 @@ export const createBookSale = async (req, res) => {
       books,
       paymentMethod,
       paymentStatus,
-      discount,
-      remarks,
     } = req.body;
 
     // -----------------------------
@@ -38,24 +37,7 @@ export const createBookSale = async (req, res) => {
     // Generate Invoice Number
     // -----------------------------
 
-    const lastSale =
-      await BookSale.findOne().sort({
-        createdAt: -1,
-      });
-
-    let invoiceNo = "INV000001";
-
-    if (lastSale) {
-
-      const lastNumber = parseInt(
-        lastSale.invoiceNo.replace("INV", "")
-      );
-
-      invoiceNo =
-        "INV" +
-        String(lastNumber + 1).padStart(6, "0");
-
-    }
+    const invoiceNo = await generateInvoiceNumber();
 
     // -----------------------------
     // Calculate Total
@@ -88,33 +70,26 @@ export const createBookSale = async (req, res) => {
 
     }
 
-    totalAmount =
-      totalAmount - (discount || 0);
 
     // -----------------------------
     // Create Sale
     // -----------------------------
 
-    const sale =
-      await BookSale.create({
+    const sale = await BookSale.create({
 
-        invoiceNo,
+  invoiceNo,
 
-        member: memberId,
+  member: memberId,
 
-        totalAmount,
+  totalAmount,
 
-        paymentMethod,
+  paymentMethod,
 
-        paymentStatus,
+  paymentStatus,
 
-        discount,
+  soldBy: req.user._id,
 
-        remarks,
-
-        soldBy: req.user._id,
-
-      });
+});
 
     // -----------------------------
     // Save Sale Items
