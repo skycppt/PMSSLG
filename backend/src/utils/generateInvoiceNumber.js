@@ -1,23 +1,35 @@
 import Counter from "../models/Counter.js";
+import BookSale from "../models/BookSale.js";
 
 export const generateInvoiceNumber = async () => {
 
-    console.log("generateInvoiceNumber called");
+  let counter = await Counter.findById("invoice");
 
-    const counter = await Counter.findByIdAndUpdate(
-        "invoice",
-        {
-            $inc: {
-                sequenceValue: 1,
-            },
-        },
-        {
-            new: true,
-            upsert: true,
-        }
-    );
+  if (!counter) {
 
-    console.log("Counter:", counter);
+    const lastSale = await BookSale.findOne()
+      .sort({ createdAt: -1 });
 
-    return "INV" + String(counter.sequenceValue).padStart(6, "0");
+    let lastNumber = 0;
+
+    if (lastSale) {
+      lastNumber = parseInt(
+        lastSale.invoiceNo.replace("INV", "")
+      );
+    }
+
+    counter = await Counter.create({
+      _id: "invoice",
+      sequenceValue: lastNumber,
+    });
+  }
+
+  counter.sequenceValue++;
+
+  await counter.save();
+
+  return (
+    "INV" +
+    String(counter.sequenceValue).padStart(6, "0")
+  );
 };
