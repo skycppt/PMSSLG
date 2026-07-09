@@ -21,21 +21,22 @@ import memberRoutes from "./routes/memberRoutes.js";
 import reportRoutes from "./routes/reportRoutes.js";
 
 
+
 connectDB();
 const limiter = rateLimit({
-
-    windowMs: 15 * 60 * 1000,
-
-    max: 100,
-
-    message: {
-
-        success: false,
-
-        message: "Too many requests. Please try again later."
-
-    }
-
+  
+  windowMs: 15 * 60 * 1000,
+  
+  max: 100,
+  
+  message: {
+    
+    success: false,
+    
+    message: "Too many requests. Please try again later."
+    
+  }
+  
 });
 
 const app = express();

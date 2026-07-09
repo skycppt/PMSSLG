@@ -8,7 +8,7 @@ export const generateInvoiceNumber = async () => {
   if (!counter) {
 
     const lastSale = await BookSale.findOne()
-      .sort({ createdAt: -1 });
+      .sort({ invoiceNo: -1 });
 
     let lastNumber = 0;
 

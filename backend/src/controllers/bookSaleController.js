@@ -15,11 +15,12 @@ export const createBookSale = async (req, res) => {
   try {
 
     const {
-      memberId,
-      books,
-      paymentMethod,
-      paymentStatus,
-    } = req.body;
+  memberId,
+  books,
+  paymentMethod,
+  paymentStatus,
+  upiTransactionId,
+} = req.body;
 
     // -----------------------------
     // Validate Member
@@ -32,6 +33,45 @@ export const createBookSale = async (req, res) => {
         message: "Member not found",
       });
     }
+
+    // -----------------------------
+// Validate UPI Transaction
+// -----------------------------
+
+        if (paymentMethod === "UPI") {
+
+          if (!upiTransactionId || upiTransactionId.trim() === "") {
+
+            return res.status(400).json({
+              message: "UPI Transaction ID is required",
+            });
+
+          }
+
+          if (upiTransactionId.trim().length < 10) {
+
+            return res.status(400).json({
+              message: "Invalid UPI Transaction ID",
+            });
+
+          }
+
+          const existingTransaction =
+            await BookSale.findOne({
+              upiTransactionId:
+                upiTransactionId.trim(),
+            });
+
+          if (existingTransaction) {
+
+            return res.status(400).json({
+              message:
+                "This UPI Transaction ID already exists",
+            });
+
+          }
+
+        }
 
     // -----------------------------
     // Generate Invoice Number
@@ -75,7 +115,7 @@ export const createBookSale = async (req, res) => {
     // Create Sale
     // -----------------------------
 
-    const sale = await BookSale.create({
+   const sale = await BookSale.create({
 
   invoiceNo,
 
@@ -86,6 +126,16 @@ export const createBookSale = async (req, res) => {
   paymentMethod,
 
   paymentStatus,
+
+  upiTransactionId:
+    paymentMethod === "UPI"
+      ? upiTransactionId.trim()
+      : "",
+
+  upiPaymentDate:
+    paymentMethod === "UPI"
+      ? new Date()
+      : null,
 
   soldBy: req.user._id,
 

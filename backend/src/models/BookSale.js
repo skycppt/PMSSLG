@@ -21,42 +21,43 @@ const bookSaleSchema = new mongoose.Schema(
     },
 
     paymentMethod: {
-        type: String,
-        enum: [
-          "Cash",
-          "UPI",
-          "Card",
-          "Bank Transfer",
-        ],
-        default: "Cash",
-      },
+      type: String,
+      enum: [
+        "Cash",
+        "UPI",
+        "Card",
+        "Bank Transfer",
+      ],
+      default: "Cash",
+    },
 
-      paymentStatus: {
-        type: String,
-        enum: [
-          "Pending",
-          "Paid",
-          "Failed",
-          "Cancelled",
-        ],
-        default: "Pending",
-      },
+    paymentStatus: {
+      type: String,
+      enum: [
+        "Pending",
+        "Paid",
+        "Failed",
+        "Cancelled",
+      ],
+      default: "Pending",
+    },
 
-      razorpayOrderId: {
-        type: String,
-      },
+    // ==========================
+    // UPI Details
+    // ==========================
 
-      razorpayPaymentId: {
-        type: String,
-      },
+    upiTransactionId: {
+      type: String,
+      default: "",
+      trim: true,
+      unique: true,
+      sparse: true,
+    },
 
-      razorpaySignature: {
-        type: String,
-      },
-
-      paidAt: {
-        type: Date,
-      },
+    upiPaymentDate: {
+      type: Date,
+      default: null,
+    },
 
     soldBy: {
       type: mongoose.Schema.Types.ObjectId,
