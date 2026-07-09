@@ -6,8 +6,6 @@ const requiredEnv = [
   "PORT",
   "MONGO_URI",
   "JWT_SECRET",
-  "RAZORPAY_KEY_ID",
-  "RAZORPAY_KEY_SECRET",
 ];
 
 requiredEnv.forEach((key) => {
