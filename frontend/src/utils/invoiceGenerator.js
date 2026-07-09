@@ -94,29 +94,28 @@ pdf.roundedRect(
   15,
   55,
   180,
-  20,
+  32,
   2,
   2
 );
-
 pdf.setFontSize(11);
 
-pdf.setFont("helvetica","bold");
+pdf.setFont("helvetica", "bold");
 
-pdf.text("Invoice No :",30,63);
-pdf.text("Date :",30,70);
+pdf.text("Invoice No :", 30, 63);
+pdf.text("Date :", 30, 70);
 
-pdf.text("Payment :",120,63);
-pdf.text("Status :",120,70);
+pdf.text("Payment :", 120, 63);
+pdf.text("Status :", 120, 70);
 
-pdf.setFont("helvetica","normal");
+pdf.setFont("helvetica", "normal");
 
-pdf.text(sale.invoiceNo,60,63);
+pdf.text(sale.invoiceNo, 60, 63);
 
 pdf.text(
-  new Date(sale.saleDate)
-    .toLocaleDateString(),
-  60,70
+  new Date(sale.saleDate).toLocaleDateString(),
+  60,
+  70
 );
 
 pdf.text(
@@ -127,9 +126,49 @@ pdf.text(
 
 pdf.text(
   sale.paymentStatus,
-  150,70
+  150,
+  70
 );
 
+// =============================
+// UPI Details
+// =============================
+
+if (sale.paymentMethod === "UPI") {
+
+  pdf.setFont("helvetica", "bold");
+
+  pdf.text(
+    "Transaction ID :",
+    30,
+    77
+  );
+
+  pdf.text(
+    "Payment Time :",
+    120,
+    77
+  );
+
+  pdf.setFont("helvetica", "normal");
+
+  pdf.text(
+    sale.upiTransactionId || "-",
+    65,
+    77
+  );
+
+  pdf.text(
+    sale.upiPaymentDate
+      ? new Date(
+          sale.upiPaymentDate
+        ).toLocaleString()
+      : "-",
+    150,
+    77
+  );
+
+}
 
 
 
@@ -138,7 +177,7 @@ pdf.text(
 
 pdf.roundedRect(
   15,
-  80,
+  92,
   180,
   25,
   2,
@@ -150,7 +189,7 @@ pdf.setFont("helvetica","bold");
 pdf.text(
   "Member Details",
   30,
-  85
+  97
 );
 
 pdf.setFont("helvetica","normal");
@@ -158,25 +197,25 @@ pdf.setFont("helvetica","normal");
 pdf.text(
   `Member ID : ${sale.member.memberId}`,
   30,
-  95
+  107
 );
 
 pdf.text(
   `Name : ${sale.member.fullName}`,
   30,
-  102
+  114
 );
 
 pdf.text(
   `Phone : ${sale.member.phone}`,
   120,
-  95
+  107
 );
 
 pdf.text(
   `Address : ${sale.member.address || "-"}`,
   120,
-  102
+  114
 );
 
 
@@ -186,7 +225,7 @@ pdf.text(
 
 autoTable(pdf,{
 
-startY:115,
+startY:127,
 
 theme:"grid",
 

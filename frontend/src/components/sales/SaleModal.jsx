@@ -6,6 +6,8 @@ import { getAllMembers } from "../../services/memberService";
 import { getAllBooks } from "../../services/bookService";
 import { createSale } from "../../services/saleService";
 
+
+
 function SaleModal({
 
   onClose,
@@ -24,14 +26,16 @@ function SaleModal({
   const [paymentMethod, setPaymentMethod] =
     useState("Cash");
 
-  const [discount, setDiscount] =
-    useState(0);
-
-  const [remarks, setRemarks] =
-    useState("");
 
   const [loading, setLoading] =
     useState(false);
+
+  const [paymentVerified, setPaymentVerified] =
+useState(false);
+
+
+  const [upiTransactionId,setUpiTransactionId]=
+useState("");
 
 
     useEffect(() => {
@@ -84,31 +88,25 @@ const bookOptions = books.map((book) => ({
 
 const totalAmount = useMemo(() => {
 
-  const subtotal = selectedBooks.reduce(
+  return selectedBooks.reduce(
 
     (sum, book) =>
 
       sum +
-      book.quantity * book.sellingPrice,
+
+      book.quantity *
+
+      book.sellingPrice,
 
     0
 
   );
 
-  return subtotal - Number(discount || 0);
-
-}, [
-
-  selectedBooks,
-
-  discount,
-
-]);
+}, [selectedBooks]);
 
 
 const handleCreateSale = async () => {
 
-  // Validation
   if (!selectedMember) {
     toast.error("Please select a member");
     return;
@@ -132,9 +130,7 @@ const handleCreateSale = async () => {
 
     paymentStatus: "Paid",
 
-    discount: 0,
-
-    remarks,
+    upiTransactionId,
 
   };
 
@@ -142,26 +138,94 @@ const handleCreateSale = async () => {
 
     setLoading(true);
 
+    // =============================
+    // CASH
+    // =============================
+
+    if (paymentMethod === "Cash") {
+
+      await createSale(saleData);
+
+      toast.success("Sale created successfully");
+
+      await onSaleAdded();
+
+      onClose();
+
+      return;
+
+    }
+
+
+
+    if (paymentMethod === "UPI") {
+
+  const transactionId =
+    upiTransactionId.trim().toUpperCase();
+
+  if (!transactionId) {
+
+    toast.error(
+      "Please enter Transaction ID"
+    );
+
+    return;
+
+  }
+
+  if (transactionId.length < 10) {
+
+    toast.error(
+      "Invalid Transaction ID"
+    );
+
+    return;
+
+  }
+
+  if (!paymentVerified) {
+
+    toast.error(
+      "Please verify the payment."
+    );
+
+    return;
+
+  }
+
+  saleData.upiTransactionId =
+    transactionId;
+
+}
+
+
+       
     await createSale(saleData);
 
-    toast.success("Sale created successfully");
+    toast.success(
+      "Sale created successfully"
+    );
 
-    if (onSaleAdded) {
-      await onSaleAdded();
-    }
+    await onSaleAdded();
 
     onClose();
 
-  } catch (error) {
+  }
+catch (error) {
 
-    console.log(error);
+    console.error(error);
+
+    console.log(error.response);
 
     toast.error(
-      error.response?.data?.message ||
-      "Failed to create sale"
+        error.response?.data?.message ||
+        error.message ||
+        "Failed"
     );
 
-  } finally {
+}
+
+  finally {
 
     setLoading(false);
 
@@ -212,13 +276,9 @@ m=>m._id===selected.value
 );
 
 setSelectedMember(member);
-
 }}
-
 />
-
 </div>
-
 {/* ===========================
     Member Preview
 =========================== */}
@@ -558,6 +618,10 @@ Remove
     Payment Method
 =========================== */}
 
+{/* ===========================
+    Payment Method
+=========================== */}
+
 <div className="mt-6">
 
   <label className="block mb-2 font-medium">
@@ -581,8 +645,67 @@ Remove
 
 </div>
 
+{/* ===========================
+    UPI Payment Section
+=========================== */}
 
+{paymentMethod === "UPI" && (
 
+<div className="mt-8 border rounded-xl p-6 bg-blue-50">
+
+<h3 className="text-xl font-semibold text-center">
+
+Scan & Pay
+
+</h3>
+
+<img
+src="/Gpay.jpeg"
+alt="UPI QR"
+className="w-72 mx-auto mt-4 rounded-lg border"
+/>
+
+<p className="text-center mt-4 text-gray-600">
+
+Amount to Pay
+
+</p>
+
+<p className="text-3xl font-bold text-center text-green-700">
+
+₹{totalAmount}
+
+</p>
+
+<input
+type="text"
+placeholder="Enter UPI Transaction ID (UTR)"
+value={upiTransactionId}
+onChange={(e)=>
+setUpiTransactionId(e.target.value)
+}
+className="border rounded-lg w-full p-3 mt-6"
+/>
+
+<label className="flex items-center gap-3 mt-5">
+
+<input
+type="checkbox"
+checked={paymentVerified}
+onChange={(e)=>
+setPaymentVerified(e.target.checked)
+}
+/>
+
+<span>
+I have verified the payment on the customer's phone.
+</span>
+
+</label>
+
+</div>
+
+)}
 
 <div className="flex justify-end gap-4 mt-8">
 
@@ -593,10 +716,14 @@ Cancel
 <button
     onClick={handleCreateSale}
     disabled={
-      loading ||
-      !selectedMember ||
-      selectedBooks.length === 0
-    }
+  loading ||
+  !selectedMember ||
+  selectedBooks.length === 0 ||
+  (
+    paymentMethod === "UPI" &&
+    !paymentVerified
+  )
+}
     className={`px-6 py-3 rounded-lg text-white transition ${
       loading
         ? "bg-gray-400 cursor-not-allowed"

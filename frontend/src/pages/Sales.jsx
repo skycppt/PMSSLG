@@ -84,6 +84,12 @@ function Sales() {
 
     sale.member?.memberId
       ?.toLowerCase()
+      .includes(text)
+
+    ||
+
+    sale.upiTransactionId
+      ?.toLowerCase()
       .includes(text);
 
   let matchesDate = true;

@@ -181,7 +181,15 @@ Payment
 
 </p>
 
-<p className="font-semibold">
+<p
+className={`font-semibold ${
+details.paymentMethod === "UPI"
+? "text-blue-600"
+: details.paymentMethod === "Cash"
+? "text-green-600"
+: "text-gray-700"
+}`}
+>
 
 {details.paymentMethod}
 
@@ -191,9 +199,17 @@ Payment
 
 <div>
 
-<p className="text-gray-500">
+<p
+className={`font-semibold ${
+details.paymentStatus === "Paid"
+? "text-green-600"
+: details.paymentStatus === "Pending"
+? "text-yellow-600"
+: "text-red-600"
+}`}
+>
 
-Payment Status
+{details.paymentStatus}
 
 </p>
 
@@ -204,6 +220,48 @@ Payment Status
 </p>
 
 </div>
+
+{details.paymentMethod === "UPI" && (
+
+<>
+
+<div>
+
+<p className="text-gray-500">
+
+UPI Transaction ID
+
+</p>
+
+<p className="font-semibold text-blue-700 break-all">
+
+{details.upiTransactionId}
+
+</p>
+
+</div>
+
+<div>
+
+<p className="text-gray-500">
+
+Payment Time
+
+</p>
+
+<p className="font-semibold">
+
+{details.upiPaymentDate
+? new Date(details.upiPaymentDate).toLocaleString()
+: "-"}
+
+</p>
+
+</div>
+
+</>
+
+)}
 
 <div>
 
@@ -318,7 +376,7 @@ className="border-b"
 
 <div className="mt-8 flex justify-end">
 
-<div className="text-right">
+<div className="bg-green-50 border rounded-xl p-6 text-right shadow-sm">
 
 <h3 className="text-gray-500">
 
