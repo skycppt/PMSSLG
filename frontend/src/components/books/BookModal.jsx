@@ -54,35 +54,42 @@ function BookModal({onClose,onBookAdded,book,}){
     };
 
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    // <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+    <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-3 sm:p-4">
 
-      <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl p-8">
+      {/* <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl p-8"> */}
+      <div className="bg-white rounded-xl shadow-xl w-full max-w-3xl max-h-[90vh] overflow-y-auto p-4 sm:p-6 md:p-8">
 
-        <h2 className="text-2xl font-bold mb-6">
+        {/* <h2 className="text-2xl font-bold mb-6"> */}
+        <h2 className="text-xl sm:text-2xl font-bold mb-4 sm:mb-6">
           {book ? "Edit Book" : "Add New Book"}
         </h2>
 
         <form
           onSubmit={handleSubmit(onSubmit)}
-          className="grid grid-cols-2 gap-5"
+          // className="grid grid-cols-2 gap-5"
+          className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-5"
         >
 
           <input
             placeholder="Title"
             {...register("title", { required: true })}
-            className="border rounded-lg p-3"
+            // className="border rounded-lg p-3"
+            className="w-full border rounded-lg p-3"
           />
 
           <input
             placeholder="Author"
             {...register("author", { required: true })}
-            className="border rounded-lg p-3"
+            // className="border rounded-lg p-3"
+            className="w-full border rounded-lg p-3"
           />
 
           <input
             placeholder="Publisher"
             {...register("publisher", { required: true })}
-            className="border rounded-lg p-3"
+            // className="border rounded-lg p-3"
+            className="w-full border rounded-lg p-3"
           />
 
           <select
@@ -140,7 +147,8 @@ function BookModal({onClose,onBookAdded,book,}){
             className="border rounded-lg p-3"
           />
 
-          <div className="col-span-2 flex justify-end gap-3 mt-4">
+          {/* <div className="col-span-2 flex justify-end gap-3 mt-4"> */}
+          <div className="md:col-span-2 flex flex-col-reverse sm:flex-row justify-end gap-3 mt-4">
 
             <button
               type="button"
