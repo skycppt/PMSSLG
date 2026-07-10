@@ -132,37 +132,9 @@ function PublicationModal({
               Punjabi
             </option>
 
-            <option value="Marathi">
-              Marathi
-            </option>
+            
 
-            <option value="Gujarati">
-              Gujarati
-            </option>
-
-            <option value="Tamil">
-              Tamil
-            </option>
-
-            <option value="Telugu">
-              Telugu
-            </option>
-
-            <option value="Kannada">
-              Kannada
-            </option>
-
-            <option value="Malayalam">
-              Malayalam
-            </option>
-
-            <option value="Odia">
-              Odia
-            </option>
-
-            <option value="Urdu">
-              Urdu
-            </option>
+            
 
           </select>
 
@@ -175,10 +147,6 @@ function PublicationModal({
 
             <option value="">
               Select Frequency
-            </option>
-
-            <option value="Weekly">
-              Weekly
             </option>
 
             <option value="Monthly">

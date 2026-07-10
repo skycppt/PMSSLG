@@ -117,22 +117,29 @@ const handleCreateSale = async () => {
     return;
   }
 
+  // const saleData = {
+
+  //   memberId: selectedMember._id,
+
+  //   books: selectedBooks.map((book) => ({
+  //     bookId: book.bookId,
+  //     quantity: book.quantity,
+  //   })),
+  //   paymentMethod,
+  //   paymentStatus: "Paid",
+  //   upiTransactionId,
+  // };
+
   const saleData = {
+  memberId: selectedMember._id,
+  books: selectedBooks.map((book) => ({
+    bookId: book.bookId,
+    quantity: book.quantity,
+  })),
+  paymentMethod,
+  paymentStatus: "Paid",
+};
 
-    memberId: selectedMember._id,
-
-    books: selectedBooks.map((book) => ({
-      bookId: book.bookId,
-      quantity: book.quantity,
-    })),
-
-    paymentMethod,
-
-    paymentStatus: "Paid",
-
-    upiTransactionId,
-
-  };
 
   try {
 
@@ -158,49 +165,29 @@ const handleCreateSale = async () => {
 
 
 
-    if (paymentMethod === "UPI") {
-
+ if (paymentMethod === "UPI") {
   const transactionId =
     upiTransactionId.trim().toUpperCase();
 
   if (!transactionId) {
-
-    toast.error(
-      "Please enter Transaction ID"
-    );
-
+    toast.error("Please enter Transaction ID");
     return;
-
   }
 
   if (transactionId.length < 10) {
-
-    toast.error(
-      "Invalid Transaction ID"
-    );
-
+    toast.error("Invalid Transaction ID");
     return;
-
   }
 
   if (!paymentVerified) {
-
-    toast.error(
-      "Please verify the payment."
-    );
-
+    toast.error("Please verify the payment.");
     return;
-
   }
 
-  saleData.upiTransactionId =
-    transactionId;
-
+  saleData.upiTransactionId = transactionId;
 }
 
-
-       
-    await createSale(saleData);
+  await createSale(saleData);
 
     toast.success(
       "Sale created successfully"

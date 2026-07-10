@@ -8,6 +8,8 @@ import SubscriptionModal from "../components/subscriptions/SubscriptionModal";
 import ViewSubscriptionModal from "../components/subscriptions/ViewSubscriptionModal";
 import RenewSubscriptionModal from "../components/subscriptions/RenewSubscriptionModal";
 import CancelSubscriptionModal from "../components/subscriptions/CancelSubscriptionModal";
+import { useLocation } from "react-router-dom";
+import { getSubscriptionStatus } from "../utils/subscriptionStatus";
 
 
 function Subscriptions() {
@@ -28,6 +30,15 @@ function Subscriptions() {
   const [renewSubscriptionData,setRenewSubscriptionData] = useState(null);
 
   const [cancelSubscriptionData, setCancelSubscriptionData]= useState(null);
+
+  const location = useLocation();
+
+  useEffect(() => {
+  if (location.state) {
+    setPublicationFilter(location.state.publication || "All");
+    setLanguageFilter(location.state.language || "All");
+  }
+}, [location.state]);
 
   useEffect(() => {
     fetchSubscriptions();
@@ -155,7 +166,7 @@ function Subscriptions() {
 
     // Status
 
-    let matchesStatus = true;
+
 
     const today = new Date();
     const end = new Date(sub.endDate);
@@ -164,20 +175,10 @@ function Subscriptions() {
       (end.getFullYear() - today.getFullYear()) * 12 +
       (end.getMonth() - today.getMonth());
 
-    if (statusFilter === "Active")
-      matchesStatus = monthsLeft > 1;
 
-    if (statusFilter === "Expiring Soon")
-      matchesStatus =
-        monthsLeft >= 0 &&
-        monthsLeft <= 1;
-
-    if (statusFilter === "Expired")
-      matchesStatus = monthsLeft < 0;
-
-    if (statusFilter === "Cancelled")
-      matchesStatus =
-        sub.status === "Cancelled";
+      const matchesStatus =
+        statusFilter === "All" ||
+        getSubscriptionStatus(sub) === statusFilter;
 
     return (
 
@@ -196,22 +197,22 @@ function Subscriptions() {
   // Dropdown values
 
   const languages = [
-    "All",
-    ...new Set(
-      subscriptions.map(
-        (s) => s.publication?.language
-      )
-    ),
-  ];
+  "All",
+  ...new Set(
+    subscriptions
+      .map((s) => s.publication?.language)
+      .filter(Boolean)
+  ),
+];
 
   const publications = [
-    "All",
-    ...new Set(
-      subscriptions.map(
-        (s) => s.publication?.name
-      )
-    ),
-  ];
+  "All",
+  ...new Set(
+    subscriptions
+      .map((s) => s.publication?.name)
+      .filter(Boolean)
+  ),
+];
 
   return (
 
@@ -262,41 +263,52 @@ function Subscriptions() {
 
       />
 
-      <div className="flex gap-4 mb-6">
 
-        <select
-          value={languageFilter}
-          onChange={(e)=>setLanguageFilter(e.target.value)}
-          className="border rounded-lg px-4 py-2"
-        >
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
 
-          {languages.map((lang)=>(
-            <option
-              key={lang}
-              value={lang}
-            >
-              {lang}
-            </option>
-          ))}
+  <div>
+    <label className="block mb-2 font-medium">
+      Select Magazine
+    </label>
 
-        </select>
+    <select
+      value={publicationFilter}
+      onChange={(e) => setPublicationFilter(e.target.value)}
+      className="border rounded-lg w-full p-3"
+    >
+      <option value="All">All Magazines</option>
 
-        <select
-          value={publicationFilter}
-          onChange={(e)=>setPublicationFilter(e.target.value)}
-          className="border rounded-lg px-4 py-2"
-        >
+      {publications
+        .filter((pub) => pub !== "All")
+        .map((pub) => (
+          <option key={pub} value={pub}>
+            {pub}
+          </option>
+        ))}
+    </select>
+  </div>
 
-          {publications.map((pub)=>(
-            <option
-              key={pub}
-              value={pub}
-            >
-              {pub}
-            </option>
-          ))}
+  <div>
+    <label className="block mb-2 font-medium">
+      Select Language
+    </label>
 
-        </select>
+    <select
+      value={languageFilter}
+      onChange={(e) => setLanguageFilter(e.target.value)}
+      className="border rounded-lg w-full p-3"
+    >
+      <option value="All">All Languages</option>
+
+      {languages
+        .filter((lang) => lang !== "All")
+        .map((lang) => (
+          <option key={lang} value={lang}>
+            {lang}
+          </option>
+        ))}
+    </select>
+  </div>
 
       </div>
 

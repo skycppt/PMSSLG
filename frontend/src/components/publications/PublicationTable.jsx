@@ -1,10 +1,13 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 function PublicationTable({
   publications,
   onEdit,
   onDelete,
 }) {
+
+  const navigate = useNavigate();
 
   if (publications.length === 0) {
     return (
@@ -55,6 +58,9 @@ function PublicationTable({
             <th className="text-left p-4">
               1 Year
             </th>
+            <th className="text-left p-4">
+              Active Subscriber
+            </th>
 
             <th className="text-left p-4">
               Status
@@ -77,9 +83,20 @@ function PublicationTable({
               className="border-b hover:bg-gray-50"
             >
 
-              <td className="p-4 font-medium">
-                {publication.name}
-              </td>
+              
+              <td
+                  className="p-4 text-blue-600 hover:underline cursor-pointer"
+                  onClick={() =>
+                    navigate("/subscriptions", {
+                      state: {
+                        publication: publication.name,
+                        language: publication.language,
+                      },
+                    })
+                  }
+                >
+                  {publication.name}
+                </td>
 
               <td className="p-4">
                 {publication.language}
@@ -95,6 +112,10 @@ function PublicationTable({
 
               <td className="p-4">
                 ₹{publication.price1Year}
+              </td>
+
+              <td className="p-4 text-center font-medium">
+                {publication.subscriberCount}
               </td>
 
               <td className="p-4">

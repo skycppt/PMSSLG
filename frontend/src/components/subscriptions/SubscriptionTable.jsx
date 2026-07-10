@@ -1,3 +1,4 @@
+import { getSubscriptionStatus } from "../../utils/subscriptionStatus";
 import {
   FaEye,
   FaSyncAlt,
@@ -56,14 +57,17 @@ function SubscriptionTable({
             <th className="p-4 text-left">
               Publication
             </th>
+            <th className="p-4 text-left">
+              Language
+            </th>
 
             <th className="p-4 text-left">
               Duration
             </th>
 
-            <th className="p-4 text-left">
+            {/* <th className="p-4 text-left">
               Months Left
-            </th>
+            </th> */}
 
             <th className="p-4 text-left">
               End Date
@@ -93,32 +97,25 @@ function SubscriptionTable({
               (end.getFullYear() - today.getFullYear()) * 12 +
               (end.getMonth() - today.getMonth());
 
-            let status = "Active";
+            const status = getSubscriptionStatus(sub);
 
-            let badge =
-              "bg-green-100 text-green-700";
+            let badge = "bg-green-100 text-green-700";
 
-            if (sub.status === "Cancelled") {
+            switch (status) {
+              case "Expiring Soon":
+                badge = "bg-yellow-100 text-yellow-700";
+                break;
 
-              status = "Cancelled";
+              case "Expired":
+                badge = "bg-red-100 text-red-700";
+                break;
 
-              badge =
-                "bg-gray-200 text-gray-700";
+              case "Cancelled":
+                badge = "bg-gray-200 text-gray-700";
+                break;
 
-            } else if (monthsLeft < 0) {
-
-              status = "Expired";
-
-              badge =
-                "bg-red-100 text-red-700";
-
-            } else if (monthsLeft <= 1) {
-
-              status = "Expiring Soon";
-
-              badge =
-                "bg-yellow-100 text-yellow-700";
-
+              default:
+                badge = "bg-green-100 text-green-700";
             }
 
             return (
@@ -149,6 +146,11 @@ function SubscriptionTable({
                   {sub.publication?.name}
 
                 </td>
+                <td className="p-4">
+
+                  {sub.publication?.language}
+
+                </td>
 
                 <td className="p-4">
 
@@ -156,20 +158,18 @@ function SubscriptionTable({
 
                 </td>
 
-                <td className="p-4">
+                
 
-                  {monthsLeft < 0
-                    ? "Expired"
-                    : `${monthsLeft} Month${monthsLeft !== 1 ? "s" : ""}`}
+               <td className="p-4">
+                  {(() => {
+                    const date = new Date(sub.endDate);
+                    date.setMonth(date.getMonth() - 1);
 
-                </td>
-
-                <td className="p-4">
-
-                  {new Date(
-                    sub.endDate
-                  ).toLocaleDateString()}
-
+                    return date.toLocaleDateString("en-IN", {
+                      month: "short",
+                      year: "numeric",
+                    });
+                  })()}
                 </td>
 
                 <td className="p-4">

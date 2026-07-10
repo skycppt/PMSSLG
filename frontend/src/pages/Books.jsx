@@ -6,6 +6,7 @@ import BookTable from "../components/books/BookTable";
 import BookSearch from "../components/books/BookSearch";
 import BookModal from "../components/books/BookModal";
 import DeleteBookModal from "../components/books/DeleteBookModal";
+import StockModal from "../components/books/StockModal";
 
 
 function Books() {
@@ -31,9 +32,11 @@ function Books() {
     }
   };
 
+  const [stockModalOpen, setStockModalOpen] = useState(false);
   const filteredBooks = books.filter((book) => {
 
   const keyword = search.toLowerCase();
+
 
   return (
     book.title.toLowerCase().includes(keyword) ||
@@ -73,6 +76,13 @@ const handleDelete = (id) => {
             + Add Book
         </button>
 
+        <button
+            onClick={() => setStockModalOpen(true)}
+            className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg"
+        >
+            📦 Add Stock
+        </button>
+
       </div>
 
       <BookSearch
@@ -91,6 +101,13 @@ const handleDelete = (id) => {
           book={selectedBook}
         />
       )}
+
+      {stockModalOpen && (
+          <StockModal
+            onClose={() => setStockModalOpen(false)}
+            onStockAdded={fetchBooks}
+          />
+        )}
       {deleteBookId && (
         <DeleteBookModal
           bookId={deleteBookId}
