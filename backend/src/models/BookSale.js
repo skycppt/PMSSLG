@@ -48,8 +48,7 @@ const bookSaleSchema = new mongoose.Schema(
 
     upiTransactionId: {
       type: String,
-      default: "",
-      trim: true,
+      default: undefined,
       unique: true,
       sparse: true,
     },

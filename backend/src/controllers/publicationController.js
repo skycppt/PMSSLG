@@ -24,7 +24,32 @@ export const createPublication = async (req, res) => {
 export const getAllPublications = async (req, res) => {
   try {
 
-    const publications = await Publication.find();
+    const publications = await Publication.aggregate([
+  {
+    $lookup: {
+      from: "subscriptions",
+      let: { publicationId: "$_id" },
+      pipeline: [
+        {
+          $match: {
+            $expr: {
+              $eq: ["$publication", "$$publicationId"],
+            },
+            status: "Active",
+          },
+        },
+      ],
+      as: "activeSubscriptions",
+    },
+  },
+  {
+    $addFields: {
+      subscriberCount: {
+        $size: "$activeSubscriptions",
+      },
+    },
+  },
+]);
 
     res.status(200).json(publications);
 
