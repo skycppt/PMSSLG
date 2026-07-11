@@ -160,3 +160,48 @@ export const getBookStockHistory =
 
     }
   };
+
+  export const restockBook = async (req, res) => {
+  try {
+    const { quantity } = req.body;
+
+    if (!quantity || quantity <= 0) {
+      return res.status(400).json({
+        message: "Quantity must be greater than 0",
+      });
+    }
+
+    const book = await Book.findById(req.params.id);
+
+    if (!book) {
+      return res.status(404).json({
+        message: "Book not found",
+      });
+    }
+
+    const oldStock = book.stockQuantity;
+
+    book.stockQuantity += Number(quantity);
+    book.lowStockAlert = book.stockQuantity < 10;
+
+    await book.save();
+
+    await StockHistory.create({
+      book: book._id,
+      changeType: "RESTOCK",
+      quantity: Number(quantity),
+      oldStock,
+      newStock: book.stockQuantity,
+      updatedBy: req.user._id,
+    });
+
+    res.status(200).json({
+      message: "Stock added successfully",
+      book,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};

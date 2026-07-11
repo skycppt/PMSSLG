@@ -1,13 +1,15 @@
 import express from "express";
 
+
 import {
   createSubscription,
   getAllSubscriptions,
-  getSubscriptionById,
   updateSubscription,
   cancelSubscription,
   renewSubscription,
   getMemberSubscriptions,
+  getSubscriptionDetails,
+  deliverMagazine,
 } from "../controllers/subscriptionController.js";
 
 import protect from "../middleware/authMiddleware.js";
@@ -22,7 +24,13 @@ router.get(
 router.get(
   "/:id",
   protect,
-  getSubscriptionById
+  getSubscriptionDetails
+);
+
+router.put(
+  "/:id/deliver",
+  protect,
+  deliverMagazine
 );
 
 router.get(
@@ -55,4 +63,21 @@ router.post(
   renewSubscription
 );
 
+
+
 export default router;
+
+
+// router.get(
+//     "/:id",
+//     protect,
+//     authorize("admin", "staff"),
+//     getSubscriptionDetails
+// );
+
+// router.put(
+//     "/:id/deliver",
+//     protect,
+//     authorize("admin", "staff"),
+//     deliverMagazine
+// );

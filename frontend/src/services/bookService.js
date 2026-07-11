@@ -11,6 +11,16 @@ export const getAllBooks = async () => {
   return response.data;
 };
 
+export const addBookStock = async (bookId, quantity) => {
+  const response = await api.put(
+    `/books/${bookId}/restock`,
+    { quantity },
+    getAuthConfig()
+  );
+
+  return response.data;
+};
+
 export const createBook = async (bookData) => {
   const response = await api.post(
     "/books",

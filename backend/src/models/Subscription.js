@@ -40,6 +40,29 @@ const subscriptionSchema =
         required: true,
       },
 
+      deliveryHistory: [
+        {
+          month: {
+            type: String,
+            required: true,
+          },
+
+          delivered: {
+            type: Boolean,
+            default: false,
+          },
+
+          deliveredAt: {
+            type: Date,
+          },
+
+          deliveredBy: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "User",
+          },
+        },
+      ],
+
       status: {
         type: String,
         enum: [
@@ -60,5 +83,7 @@ const Subscription =
     "Subscription",
     subscriptionSchema
   );
+
+  
 
 export default Subscription;

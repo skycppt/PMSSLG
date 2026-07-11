@@ -1,4 +1,5 @@
 import { getSubscriptionStatus } from "../../utils/subscriptionStatus";
+import { useNavigate } from "react-router-dom";
 import {
   FaEye,
   FaSyncAlt,
@@ -7,11 +8,12 @@ import {
 
 function SubscriptionTable({
   subscriptions,
-  onView,
   onRenew,
   onCancel,
 }) {
 
+
+  const navigate = useNavigate();
   if (subscriptions.length === 0) {
 
     return (
@@ -187,12 +189,11 @@ function SubscriptionTable({
                   <div className="flex gap-4">
 
                     <button
-                        onClick={() => {
-                          console.log("Clicked subscription:", sub);
-                          onView(sub);
-                        }}
+                      onClick={() =>
+                        navigate(`/subscriptions/${sub._id}`)
+                      }
                       className="text-blue-600 hover:text-blue-800"
-                      title="View"
+                      title="View Details"
                     >
                       <FaEye />
                     </button>

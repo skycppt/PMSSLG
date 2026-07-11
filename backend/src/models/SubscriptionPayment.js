@@ -46,8 +46,6 @@ const subscriptionPaymentSchema =
         enum: [
           "Cash",
           "UPI",
-          "Card",
-          "Bank Transfer",
         ],
         default: "Cash",
       },

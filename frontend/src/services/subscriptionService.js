@@ -1,5 +1,6 @@
 import api from "../api/axios";
 
+
 const getAuthConfig = () => ({
   headers: {
     Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -64,6 +65,28 @@ export const getSubscriptionById = async (
 export const getAllPublications = async () => {
   const response = await api.get(
     "/publications",
+    getAuthConfig()
+  );
+
+  return response.data;
+};
+
+export const getSubscriptionDetails = async (id) => {
+  const response = await api.get(
+    `/subscriptions/${id}`,
+    getAuthConfig()
+  );
+
+  return response.data;
+};
+
+export const deliverMagazine = async (
+  id,
+  month
+) => {
+  const response = await api.put(
+    `/subscriptions/${id}/deliver`,
+    { month },
     getAuthConfig()
   );
 

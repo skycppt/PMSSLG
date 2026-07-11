@@ -101,14 +101,9 @@ function BookModal({onClose,onBookAdded,book,}){
             <option value="English">English</option>
             <option value="Bengali">Bengali</option>
             <option value="Punjabi">Punjabi</option>
-            <option value="Marathi">Marathi</option>
-            <option value="Gujarati">Gujarati</option>
-            <option value="Tamil">Tamil</option>
-            <option value="Telugu">Telugu</option>
-            <option value="Kannada">Kannada</option>
-            <option value="Malayalam">Malayalam</option>
-            <option value="Odia">Odia</option>
-            <option value="Urdu">Urdu</option>
+            <option value="Other">Other</option>
+            <option value="Not Applicable">Not Applicable</option>
+
           </select>
 
           <select
@@ -116,13 +111,13 @@ function BookModal({onClose,onBookAdded,book,}){
             className="border rounded-lg p-3 bg-white"
           >
             <option value="">Select Genre</option>
-            <option value="Spiritual">Spiritual</option>
-            <option value="Biography">Biography</option>
+            <option value="Holy Books">Holy Books</option>
+            <option value="History">History</option>
+            <option value="Ideology">Ideology</option>
             <option value="Children">Children</option>
-            <option value="Poetry">Poetry</option>
+            <option value="Song">Song and Poem</option>
+            <option value="Merchandise">Merchandise</option>
             <option value="Magazine">Magazine</option>
-            <option value="Health">Health</option>
-            <option value="Motivational">Motivational</option>
             <option value="Other">Other</option>
           </select>
 

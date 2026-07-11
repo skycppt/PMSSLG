@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import toast from "react-hot-toast";
 
 import { getAllBooks } from "../../services/bookService";
+import { addBookStock } from "../../services/bookService";
 
 function StockModal({ onClose, onStockAdded }) {
 
@@ -41,9 +42,31 @@ function StockModal({ onClose, onStockAdded }) {
   }
 };
 
-   const onSubmit = async (data) => {
-    console.log(data);
-  };
+  const onSubmit = async (data) => {
+  try {
+    setLoading(true);
+
+    await addBookStock(
+      data.bookId,
+      data.quantity
+    );
+
+    toast.success("Stock added successfully");
+
+    onStockAdded();
+
+    onClose();
+  } catch (err) {
+    console.log(err);
+
+    toast.error(
+      err.response?.data?.message ||
+      "Failed to add stock"
+    );
+  } finally {
+    setLoading(false);
+  }
+};
 
   useEffect(() => {
 

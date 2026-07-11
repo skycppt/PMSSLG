@@ -25,8 +25,6 @@ const bookSaleSchema = new mongoose.Schema(
       enum: [
         "Cash",
         "UPI",
-        "Card",
-        "Bank Transfer",
       ],
       default: "Cash",
     },

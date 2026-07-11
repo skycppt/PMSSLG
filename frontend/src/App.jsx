@@ -12,6 +12,7 @@ import Members from "./pages/Members";
 import Subscriptions from "./pages/Subscriptions";
 import Sales from "./pages/Sales";
 import Reports from "./pages/Reports";
+import SubscriptionDetails from "./components/subscriptions/SubscriptionDetails";
 
 
 
@@ -100,6 +101,17 @@ function App() {
                 </AdminLayout>
               </ProtectedRoute>
             }
+            />
+
+            <Route
+              path="/subscriptions/:id"
+              element={
+                <ProtectedRoute>
+                  <AdminLayout>
+                    <SubscriptionDetails />
+                  </AdminLayout>
+                </ProtectedRoute>
+              }
             />
 
     </Routes>

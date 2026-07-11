@@ -7,6 +7,7 @@ import {
   updateBook,
   deleteBook,
   getBookStockHistory,
+  restockBook,
 } from "../controllers/bookController.js";
 
 import protect from "../middleware/authMiddleware.js";
@@ -43,6 +44,13 @@ router.delete(
   protect,
   authorize("admin"),
   deleteBook
+);
+
+router.put(
+  "/:id/restock",
+  protect,
+  authorize("admin", "staff"),
+  restockBook
 );
 
 export default router;

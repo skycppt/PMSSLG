@@ -117,18 +117,6 @@ const handleCreateSale = async () => {
     return;
   }
 
-  // const saleData = {
-
-  //   memberId: selectedMember._id,
-
-  //   books: selectedBooks.map((book) => ({
-  //     bookId: book.bookId,
-  //     quantity: book.quantity,
-  //   })),
-  //   paymentMethod,
-  //   paymentStatus: "Paid",
-  //   upiTransactionId,
-  // };
 
   const saleData = {
   memberId: selectedMember._id,
@@ -624,10 +612,6 @@ Remove
   >
     <option value="Cash">Cash</option>
     <option value="UPI">UPI</option>
-    <option value="Card">Card</option>
-    <option value="Bank Transfer">
-      Bank Transfer
-    </option>
   </select>
 
 </div>

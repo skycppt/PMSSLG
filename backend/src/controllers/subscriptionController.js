@@ -371,3 +371,99 @@ export const getMemberSubscriptions =
     }
 
   };
+
+
+
+  export const getSubscriptionDetails = async (req, res) => {
+  try {
+    const subscription = await Subscription.findById(req.params.id)
+      .populate(
+        "member",
+        "memberId fullName phone email address"
+      )
+      .populate(
+        "publication",
+        "name language"
+      )
+      .populate(
+        "deliveryHistory.deliveredBy",
+        "fullName"
+      );
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    res.status(200).json(subscription);
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
+
+
+export const deliverMagazine = async (req, res) => {
+  try {
+
+    const { month } = req.body;
+
+    if (!month) {
+      return res.status(400).json({
+        message: "Month is required",
+      });
+    }
+
+    const subscription =
+      await Subscription.findById(req.params.id);
+
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
+      });
+    }
+
+    const alreadyDelivered =
+      subscription.deliveryHistory.find(
+        (item) => item.month === month
+      );
+
+    if (alreadyDelivered) {
+      return res.status(400).json({
+        message:
+          "Magazine already delivered for this month",
+      });
+    }
+
+    subscription.deliveryHistory.push({
+      month,
+      delivered: true,
+      deliveredAt: new Date(),
+      deliveredBy: req.user._id,
+    });
+
+    await subscription.save();
+
+    res.status(200).json({
+      message:
+        "Magazine marked as delivered successfully",
+      subscription,
+    });
+
+  } catch (error) {
+
+    console.log(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
