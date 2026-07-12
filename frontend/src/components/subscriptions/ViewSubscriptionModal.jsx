@@ -18,6 +18,27 @@ Subscription Details
 
 </h2>
 
+{subscription.status === "Cancelled" && (
+  <div className="mb-6 rounded-xl border border-red-300 bg-red-50 p-5">
+
+    <h2 className="text-red-700 font-bold text-lg">
+      Subscription Cancelled
+    </h2>
+
+    <p className="text-red-600 mt-2">
+      This subscription was cancelled on{" "}
+      {new Date(
+        subscription.cancelledAt
+      ).toLocaleDateString("en-IN")}.
+    </p>
+
+    <p className="text-red-500 mt-1">
+      No further magazine deliveries are allowed.
+    </p>
+
+  </div>
+)}
+
 <div className="grid grid-cols-2 gap-6">
 
 <div>

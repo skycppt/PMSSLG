@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { getAllMembers } from "../../services/memberService";
 import { getAllPublications } from "../../services/publicationService";
 import { createSubscription } from "../../services/subscriptionService";
+import PaymentSection from "../common/PaymentSection";
 
 function SubscriptionModal({
   onClose,
@@ -27,6 +28,20 @@ function SubscriptionModal({
 
   const [loading, setLoading] =
     useState(false);
+
+  const [paymentMethod, setPaymentMethod] =
+  useState("Cash");
+
+const [paymentVerified, setPaymentVerified] =
+  useState(false);
+
+const [upiTransactionId, setUpiTransactionId] =
+  useState("");
+
+const [cardReference, setCardReference] =
+  useState("");
+
+
 
   useEffect(() => {
 
@@ -585,7 +600,21 @@ Price
 
 </div>
 
+<PaymentSection
+  amount={amount}
 
+  paymentMethod={paymentMethod}
+  setPaymentMethod={setPaymentMethod}
+
+  paymentVerified={paymentVerified}
+  setPaymentVerified={setPaymentVerified}
+
+  upiTransactionId={upiTransactionId}
+  setUpiTransactionId={setUpiTransactionId}
+
+  cardReference={cardReference}
+  setCardReference={setCardReference}
+/>
 {/* ===========================
     Buttons
 =========================== */}

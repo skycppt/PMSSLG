@@ -13,13 +13,15 @@ function generateMonths(startDate, endDate) {
   const current = new Date(startDate);
   current.setDate(1);
 
-  const end = new Date(endDate);
-  end.setDate(1);
+  // Last magazine month = previous month of endDate
+  const lastMonth = new Date(endDate);
+  lastMonth.setMonth(lastMonth.getMonth() - 1);
+  lastMonth.setDate(1);
 
-  while (current <= end) {
+  while (current <= lastMonth) {
     months.push({
       value: `${current.getFullYear()}-${String(
-        current.getMonth() +1,
+        current.getMonth() + 1
       ).padStart(2, "0")}`,
       label: current.toLocaleDateString("en-IN", {
         month: "long",
@@ -91,11 +93,15 @@ function SubscriptionDetails() {
     return <div className="p-6">Subscription not found.</div>;
   }
 
-  const months = generateMonths(subscription.startDate, subscription.endDate);
+    const months = generateMonths(
+  subscription.startDate,
+  subscription.endDate
+);
 
   const deliveredCount = subscription.deliveryHistory.length;
   const totalMonths = months.length;
   const progress = (deliveredCount / totalMonths) * 100;
+
 
   return (
     <div className="max-w-6xl mx-auto p-6">
@@ -107,27 +113,27 @@ function SubscriptionDetails() {
         <div className="grid grid-cols-2 gap-4">
           <div>
             <strong>Name</strong>
-            <p>{subscription.member.fullName}</p>
+            <p>{subscription.member?.fullName || "Member Not Found"}</p>
           </div>
 
           <div>
             <strong>Member ID</strong>
-            <p>{subscription.member.memberId}</p>
+            <p>{subscription.member?.memberId || "-"}</p>
           </div>
 
           <div>
             <strong>Phone</strong>
-            <p>{subscription.member.phone}</p>
+            <p>{subscription.member?.phone || "-"}</p>
           </div>
 
           <div>
             <strong>Publication</strong>
-            <p>{subscription.publication.name}</p>
+            <p>{subscription.publication?.name || "Publication Not Found"}</p>
           </div>
 
           <div>
             <strong>Language</strong>
-            <p>{subscription.publication.language}</p>
+            <p>{subscription.publication?.language || "-"}</p>
           </div>
 
           <div>
@@ -142,10 +148,158 @@ function SubscriptionDetails() {
 
           <div>
             <strong>End Date</strong>
-            <p>{new Date(subscription.endDate).toLocaleDateString()}</p>
+            <p>{(() => {
+                const date = new Date(subscription.endDate);
+
+                // Move to previous month
+                date.setMonth(date.getMonth() - 1);
+
+                // Set to last day of that month
+                date.setDate(
+                  new Date(
+                    date.getFullYear(),
+                    date.getMonth() + 1,
+                    0
+                  ).getDate()
+                );
+
+                return date.toLocaleDateString("en-IN");
+              })()}
+              </p>
+          </div>
+          <div>
+            <strong>Latest Payment</strong>
+            <p className="text-green-600 font-semibold">
+              ₹{subscription.payments?.[0]?.amount || subscription.amountPaid}
+            </p>
+          </div>
+
+          <div>
+            <strong>Payment Method</strong>
+            <p>
+              {subscription.payments?.[0]?.paymentMethod || "-"}
+            </p>
           </div>
         </div>
       </div>
+
+
+      <div className="bg-white rounded-xl shadow p-6 mt-6">
+
+    <h2 className="text-xl font-semibold mb-6">
+
+        Renewal History
+
+    </h2>
+
+    {subscription.renewalHistory.length === 0 ? (
+
+        <p className="text-gray-500">
+
+            No renewals yet.
+
+        </p>
+
+    ) : (
+
+        <div className="space-y-4">
+
+            {subscription.renewalHistory.map(
+                (renewal,index)=>(
+                    <div
+                        key={index}
+                        className="border rounded-lg p-4"
+                    >
+
+                        <div className="flex justify-between">
+
+                            <div>
+
+                                <h3 className="font-semibold">
+
+                                    {renewal.duration}
+
+                                </h3>
+
+                                <p className="text-gray-500">
+
+                                    Renewed On
+
+                                    {" "}
+
+                                    {new Date(
+                                        renewal.renewedOn
+                                    ).toLocaleDateString("en-IN")}
+
+                                </p>
+
+                            </div>
+
+                            <div className="text-right">
+
+                                <p>
+
+                                    ₹{renewal.amountPaid}
+
+                                </p>
+
+                                <p className="text-sm text-gray-500">
+
+                                    By
+
+                                    {" "}
+
+                                    {renewal.processedBy?.fullName}
+
+                                </p>
+
+                            </div>
+
+                        </div>
+
+                        <div className="mt-3 text-sm">
+
+                            <div className="mt-3 text-sm space-y-1">
+
+                              <p>
+                                  <strong>Old Expiry:</strong>{" "}
+                                  {new Date(
+                                      renewal.oldEndDate
+                                  ).toLocaleDateString("en-IN")}
+                              </p>
+
+                              <p>
+                                  <strong>New Expiry:</strong>{" "}
+                                  {new Date(
+                                      renewal.newEndDate
+                                  ).toLocaleDateString("en-IN")}
+                              </p>
+
+                              <p>
+                                  <strong>Payment Mode:</strong>{" "}
+                                  {renewal.paymentMethod}
+                              </p>
+
+                              {renewal.paymentMethod === "UPI" && (
+                                  <p>
+                                      <strong>Transaction ID:</strong>{" "}
+                                      {renewal.transactionId}
+                                  </p>
+                              )}
+
+                          </div>
+
+                        </div>
+
+                    </div>
+                )
+            )}
+
+        </div>
+
+    )}
+
+</div>
 
       <div className="bg-white rounded-xl shadow p-6">
         <h2 className="text-xl font-semibold mb-6">
@@ -219,13 +373,22 @@ function SubscriptionDetails() {
                   )}
                 </div>
 
-                {delivered ? (
+                {delivered ?  (
                   <button
                     disabled
                     className="px-4 py-2 bg-green-600 text-white rounded-lg cursor-not-allowed"
                   >
                     Delivered
                   </button>
+                ) : subscription.status === "Cancelled" ? (
+
+                  <button
+                    disabled
+                    className="px-4 py-2 bg-gray-500 text-white rounded-lg cursor-not-allowed"
+                  >
+                    Subscription Cancelled
+                  </button>
+
                 ) : (
                   <button
                     onClick={() => {
