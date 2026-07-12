@@ -49,16 +49,32 @@ const subscriptionPaymentSchema =
         ],
         default: "Cash",
       },
+
+      // UPI Transaction ID
+      transactionId: {
+        type: String,
+        default: null,
+      },
+
+
+      paymentStatus: {
+        type: String,
+        enum: [
+          "Pending",
+          "Paid",
+          "Failed",
+        ],
+        default: "Paid",
+      },
     },
     {
       timestamps: true,
     }
   );
 
-const SubscriptionPayment =
-  mongoose.model(
-    "SubscriptionPayment",
-    subscriptionPaymentSchema
-  );
+const SubscriptionPayment = mongoose.model(
+  "SubscriptionPayment",
+  subscriptionPaymentSchema
+);
 
 export default SubscriptionPayment;

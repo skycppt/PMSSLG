@@ -72,6 +72,55 @@ const subscriptionSchema =
         ],
         default: "Active",
       },
+      cancelledAt: {
+          type: Date,
+        },
+
+        renewalHistory: [
+      {
+        duration: {
+          type: String,
+          enum: ["3 Months", "6 Months", "1 Year"],
+          required: true,
+        },
+
+        renewedOn: {
+          type: Date,
+          default: Date.now,
+        },
+
+        oldEndDate: {
+          type: Date,
+          required: true,
+        },
+
+        newEndDate: {
+          type: Date,
+          required: true,
+        },
+
+        amountPaid: {
+          type: Number,
+          required: true,
+        },
+
+        processedBy: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "User",
+        },
+
+        paymentMethod: {
+          type: String,
+          enum: ["Cash", "UPI", "Card"],
+        },
+
+        transactionId: {
+          type: String,
+          default: null,
+        },
+      },
+      ],
+      
     },
     {
       timestamps: true,

@@ -3,14 +3,43 @@ import Publication from "../models/Publication.js";
 import SubscriptionPayment
 from "../models/SubscriptionPayment.js";
 
-export const createSubscription =
-  async (req, res) => {
+
+const calculateEndDate = (startDate, duration) => {
+  const endDate = new Date(startDate);
+
+  switch (duration) {
+    case "3 Months":
+      endDate.setMonth(endDate.getMonth() + 3);
+      break;
+
+    case "6 Months":
+      endDate.setMonth(endDate.getMonth() + 6);
+      break;
+
+    case "1 Year":
+      endDate.setFullYear(endDate.getFullYear() + 1);
+      break;
+
+    default:
+      throw new Error("Invalid subscription duration");
+  }
+
+  // End one day before the anniversary date
+  endDate.setDate(endDate.getDate() - 1);
+
+  return endDate;
+};
+
+export const createSubscription = async (req, res) => {
     try {
 
       const {
-          memberId,
-          publicationId,
-          duration,
+        memberId,
+        publicationId,
+        duration,
+        paymentMethod,
+        transactionId,
+        cardReference,
       } = req.body;
 
       const existingSubscription =
@@ -41,33 +70,12 @@ export const createSubscription =
 
       const startDate =
         new Date();
-
-      const endDate =
-        new Date(startDate);
-
-      let amountPaid = 0;
-
-      if (
-        duration === "6 Months"
-      ) {
-        amountPaid =
-          publication.price6Months;
-
-        endDate.setMonth(
-          endDate.getMonth() + 6
-        );
-      }
-
-      if (
-        duration === "1 Year"
-      ) {
-        amountPaid =
-          publication.price1Year;
-
-        endDate.setFullYear(
-          endDate.getFullYear() + 1
-        );
-      }
+        
+        let amountPaid = 0;
+      const endDate = calculateEndDate(
+          startDate,
+          duration
+      );
 
       const subscription =
         await Subscription.create({
@@ -90,14 +98,32 @@ export const createSubscription =
       
 
         await SubscriptionPayment.create({
-          subscription: subscription._id,
-          member: memberId,
-          processedBy: req.user._id,
-          publication: publication._id,
-          amount: amountPaid,
-          paymentType: "New Subscription",
-          paymentMethod: "Cash",
-        });
+            subscription: subscription._id,
+            member: memberId,
+            processedBy: req.user._id,
+            publication: publication._id,
+            amount: amountPaid,
+            paymentType: "New Subscription",
+
+            paymentMethod,
+
+            transactionId:
+              paymentMethod === "UPI"
+                ? transactionId
+                : null,
+
+            paymentStatus: "Paid",
+          });
+
+      if (
+          paymentMethod === "UPI" &&
+          !transactionId
+        ) {
+          return res.status(400).json({
+            message: "UPI Transaction ID is required",
+          });
+        }
+
 
       res.status(201).json({
         message:
@@ -128,7 +154,7 @@ export const createSubscription =
 
       .populate(
         "publication",
-        "name language frequency"
+        "name language frequency price6Months price1Year"
       )
 
       .sort({
@@ -146,101 +172,131 @@ export const createSubscription =
   }
 };
 
-  export const renewSubscription =
-  async (req, res) => {
-    try {
+  export const renewSubscription = async (req, res) => {
+  try {
 
-      const { duration } = req.body;
+    const {
+  duration,
+  paymentMethod,
+  transactionId,
+  cardReference,
+} = req.body;
 
-      const subscription =
-        await Subscription.findById(
-          req.params.id
-        );
+    const subscription = await Subscription.findById(req.params.id);
 
-      if (!subscription) {
-        return res.status(404).json({
-          message:
-            "Subscription not found",
-        });
-      }
-
-      let amountPaid = 0;
-
-      const publication =
-        await Publication.findById(
-          subscription.publication
-        );
-
-      if (!publication) {
-        return res.status(404).json({
-          message:
-            "Publication not found",
-        });
-      }
-
-      const newEndDate =
-        new Date(subscription.endDate);
-
-      if (duration === "3 Months") {
-
-          amountPaid = publication.price3Months;
-
-          endDate.setMonth(
-            endDate.getMonth() + 3
-          );
-
-        } else if (duration === "6 Months") {
-
-          amountPaid = publication.price6Months;
-
-          endDate.setMonth(
-            endDate.getMonth() + 6
-          );
-
-        } else {
-
-          amountPaid = publication.price1Year;
-
-          endDate.setFullYear(
-            endDate.getFullYear() + 1
-          );
-
-        }
-
-      subscription.endDate =
-        newEndDate;
-
-      subscription.amountPaid +=
-        amountPaid;
-
-      await subscription.save();
-
-      await SubscriptionPayment.create({
-          subscription: subscription._id,
-          member: memberId,
-          processedBy: req.user._id,
-          publication: publication._id,
-          amount: amountPaid,
-          paymentType: "New Subscription",
-          paymentMethod: "Cash",
-        });
-
-      res.status(200).json({
-        message:
-          "Subscription renewed successfully",
-
-        subscription,
+    if (!subscription) {
+      return res.status(404).json({
+        message: "Subscription not found",
       });
-
-    } catch (error) {
-
-      res.status(500).json({
-        message:
-          error.message,
-      });
-
     }
-  };
+
+    const publication = await Publication.findById(
+      subscription.publication
+    );
+
+    if (!publication) {
+      return res.status(404).json({
+        message: "Publication not found",
+      });
+    }
+
+    if (
+      paymentMethod === "UPI" &&
+      !transactionId
+    ) {
+      return res.status(400).json({
+        message: "UPI Transaction ID is required",
+      });
+    }
+
+    let amountPaid = 0;
+
+    switch (duration) {
+
+      case "3 Months":
+        amountPaid = publication.price3Months;
+        break;
+
+      case "6 Months":
+        amountPaid = publication.price6Months;
+        break;
+
+      case "1 Year":
+        amountPaid = publication.price1Year;
+        break;
+
+      default:
+        return res.status(400).json({
+          message: "Invalid subscription duration",
+        });
+    }
+
+    const oldEndDate = new Date(subscription.endDate);
+    const newEndDate = calculateEndDate(
+      subscription.endDate,
+      duration
+    );
+
+
+
+    subscription.endDate = newEndDate;
+
+    subscription.amountPaid += amountPaid;
+
+    subscription.status = "Active";
+
+    subscription.cancelledAt = null;
+
+    subscription.renewalHistory.push({
+    duration,
+
+    renewedOn: new Date(),
+
+    oldEndDate,
+
+    newEndDate,
+
+    amountPaid,
+
+    paymentMethod,
+    transactionId: paymentMethod === "UPI" ? transactionId : null,
+
+
+    processedBy: req.user._id,
+});
+
+    await subscription.save();
+
+    await SubscriptionPayment.create({
+        subscription: subscription._id,
+        member: subscription.member,
+        processedBy: req.user._id,
+        publication: publication._id,
+        amount: amountPaid,
+        paymentType: "Renewal",
+
+        paymentMethod,
+
+        transactionId: paymentMethod === "UPI" ? transactionId : null,
+        paymentStatus: "Paid",
+            });
+
+
+    res.status(200).json({
+      message: "Subscription renewed successfully",
+      subscription,
+    });
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).json({
+      message: error.message,
+    });
+
+  }
+};
 
   export const getSubscriptionById = async (req, res) => {
   try {
@@ -255,7 +311,12 @@ export const createSubscription =
       .populate(
         "publication",
         "name language frequency"
-      );
+      )
+
+      .populate(
+      "renewalHistory.processedBy",
+      "fullName"
+  );
 
     if (!subscription) {
       return res.status(404).json({
@@ -320,6 +381,7 @@ export const cancelSubscription = async (req, res) => {
     }
 
     subscription.status = "Cancelled";
+    subscription.cancelledAt = new Date();
 
     await subscription.save();
 
@@ -383,11 +445,16 @@ export const getMemberSubscriptions =
       )
       .populate(
         "publication",
-        "name language"
+        "name language frequency price6Months price1Year"
       )
       .populate(
         "deliveryHistory.deliveredBy",
         "fullName"
+      )
+
+      .populate(
+          "renewalHistory.processedBy",
+          "fullName"
       );
 
     if (!subscription) {
@@ -396,7 +463,18 @@ export const getMemberSubscriptions =
       });
     }
 
-    res.status(200).json(subscription);
+
+    
+    const payments = await SubscriptionPayment.find({
+      subscription: subscription._id,
+    })
+    .populate("processedBy", "fullName")
+    .sort({ createdAt: -1 });
+    
+    res.status(200).json({
+  ...subscription.toObject(),
+  payments,
+});
 
   } catch (error) {
 
@@ -430,6 +508,14 @@ export const deliverMagazine = async (req, res) => {
       });
     }
 
+    if (subscription.status === "Cancelled") {
+      return res.status(400).json({
+        message:
+          "This subscription has been cancelled. Magazine delivery is not allowed.",
+      });
+    }
+
+    
     const alreadyDelivered =
       subscription.deliveryHistory.find(
         (item) => item.month === month
