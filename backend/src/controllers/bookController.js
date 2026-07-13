@@ -73,7 +73,7 @@ export const updateBook = async (req, res) => {
 
     Object.assign(book, req.body);
 
-    if (book.stockQuantity < 10) {
+    if (book.stockQuantity < 5) {
       book.lowStockAlert = true;
     } else {
       book.lowStockAlert = false;
@@ -182,7 +182,7 @@ export const getBookStockHistory =
     const oldStock = book.stockQuantity;
 
     book.stockQuantity += Number(quantity);
-    book.lowStockAlert = book.stockQuantity < 10;
+    book.lowStockAlert = book.stockQuantity < 5;
 
     await book.save();
 

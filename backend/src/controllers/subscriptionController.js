@@ -30,6 +30,9 @@ const calculateEndDate = (startDate, duration) => {
   return endDate;
 };
 
+
+
+
 export const createSubscription = async (req, res) => {
     try {
 
@@ -41,6 +44,8 @@ export const createSubscription = async (req, res) => {
         transactionId,
         cardReference,
       } = req.body;
+
+      console.log(req.body);
 
       const existingSubscription =
         await Subscription.findOne({
@@ -68,69 +73,94 @@ export const createSubscription = async (req, res) => {
         });
       }
 
-      const startDate =
-        new Date();
-        
+      const startDate = new Date();
+
         let amountPaid = 0;
-      const endDate = calculateEndDate(
-          startDate,
-          duration
-      );
 
-      const subscription =
-        await Subscription.create({
-          member: memberId,
+        switch (duration) {
 
-          publication:
-            publication._id,
+          case "3 Months":
+            amountPaid = publication.price3Months;
+            break;
 
-          duration,
+          case "6 Months":
+            amountPaid = publication.price6Months;
+            break;
 
-          startDate,
+          case "1 Year":
+            amountPaid = publication.price1Year;
+            break;
 
-          endDate,
+          default:
+            return res.status(400).json({
+              message: "Invalid subscription duration",
+            });
 
-          amountPaid,
+        }
 
-          status: "Active",
-        });
+        const endDate = calculateEndDate(
+            startDate,
+            duration
+        );
 
-      
-
-        await SubscriptionPayment.create({
-            subscription: subscription._id,
-            member: memberId,
-            processedBy: req.user._id,
-            publication: publication._id,
-            amount: amountPaid,
-            paymentType: "New Subscription",
-
-            paymentMethod,
-
-            transactionId:
-              paymentMethod === "UPI"
-                ? transactionId
-                : null,
-
-            paymentStatus: "Paid",
-          });
 
       if (
           paymentMethod === "UPI" &&
-          !transactionId
+           (!transactionId || transactionId.trim() === "")
         ) {
           return res.status(400).json({
             message: "UPI Transaction ID is required",
           });
         }
+        const subscription =
+          await Subscription.create({
+            member: memberId,
+  
+            publication:
+              publication._id,
+  
+            duration,
+  
+            startDate,
+  
+            endDate,
+  
+            amountPaid,
+  
+            status: "Active",
+          });
+          await SubscriptionPayment.create({
+                subscription: subscription._id,
+                member: memberId,
+                processedBy: req.user._id,
+                publication: publication._id,
+                amount: amountPaid,
+                paymentType: "New Subscription",
+    
+                paymentMethod,
+    
+                transactionId:
+                  paymentMethod === "UPI"
+                    ? transactionId
+                    : null,
+    
+                paymentStatus: "Paid",
+              });
 
 
-      res.status(201).json({
-        message:
-          "Subscription created successfully",
 
-        subscription,
-      });
+        res.status(201).json({
+          message:
+            "Subscription created successfully",
+  
+          subscription,
+        });
+
+
+        
+
+
+
 
     } catch (error) {
 
@@ -213,9 +243,6 @@ export const createSubscription = async (req, res) => {
 
     switch (duration) {
 
-      case "3 Months":
-        amountPaid = publication.price3Months;
-        break;
 
       case "6 Months":
         amountPaid = publication.price6Months;

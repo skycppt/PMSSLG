@@ -178,7 +178,7 @@ export const createBookSale = async (req, res) => {
         item.quantity;
 
       book.lowStockAlert =
-        book.stockQuantity < 10;
+        book.stockQuantity < 5;
 
       await book.save();
 

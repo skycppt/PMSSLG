@@ -5,14 +5,14 @@ export async function getInventoryStats() {
     const lowStockBooks =
         await Book.countDocuments({
             stockQuantity: {
-                $lt: 10
+                $lt: 5
             }
         });
 
     const lowStockList =
         await Book.find({
             stockQuantity: {
-                $lt: 10
+                $lt: 5
             }
         })
             .select("title stockQuantity")
