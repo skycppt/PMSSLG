@@ -37,6 +37,7 @@ function Subscriptions() {
   if (location.state) {
     setPublicationFilter(location.state.publication || "All");
     setLanguageFilter(location.state.language || "All");
+    setStatusFilter(location.state.status || "All");
   }
 }, [location.state]);
 
@@ -214,6 +215,7 @@ function Subscriptions() {
   ),
 ];
 
+
   return (
 
     <div>
@@ -348,17 +350,70 @@ function Subscriptions() {
           subscriptions={filteredSubscriptions}
 
           onView={(subscription) => {
-              setViewSubscription(subscription);
+            setViewSubscription(subscription);
           }}
 
           onRenew={(subscription) => {
-              setRenewSubscriptionData(subscription);
+            setRenewSubscriptionData(subscription);
           }}
 
           onCancel={(subscription) => {
-              setCancelSubscriptionData(subscription);
+            setCancelSubscriptionData(subscription);
           }}
-      />
+
+          onWhatsapp={(subscription) => {
+
+            const phone =
+              subscription.member.phone.replace(/\D/g, "");
+
+            const expiryDate = (() => {
+              const date = new Date(subscription.endDate);
+
+              date.setMonth(date.getMonth() - 1);
+
+              date.setDate(
+                new Date(
+                  date.getFullYear(),
+                  date.getMonth() + 1,
+                  0
+                ).getDate()
+              );
+
+              return date.toLocaleDateString("en-IN");
+            })();
+
+            const message =
+        `🙏🏻 Dhan Nirankar Ji 🙏🏻
+
+        Rev. ${subscription.member.fullName} Ji,
+
+        Your subscription for
+
+        📰 ${subscription.publication.name}
+        (${subscription.publication.language})
+
+        is going to expire soon.
+
+        📅 Last Magazine Month:
+        ${expiryDate}
+
+        Kindly renew your subscription to continue receiving your monthly magazine without interruption.
+
+        For any assistance, please contact Sant Nirankari Publication, Siliguri.
+
+        Thank you.
+
+        Regards,
+        Sant Nirankari Mission
+        Siliguri Zone`;
+
+            window.open(
+              `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`,
+              "_blank"
+            );
+
+          }}
+        />
 
     {showModal && (
 
@@ -432,5 +487,7 @@ function StatCard({
   
 
   }
+
+
 
 export default Subscriptions;

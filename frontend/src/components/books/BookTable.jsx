@@ -75,7 +75,7 @@ function BookTable({
 
               <td className="p-4">
 
-                {book.stockQuantity < 10 ? (
+                {book.stockQuantity < 5 ? (
 
                   <span className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm">
 

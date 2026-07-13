@@ -177,9 +177,36 @@ const [cardReference, setCardReference] =
 
         try {
 
+          // Frontend validation
+          if (
+            paymentMethod === "UPI" &&
+            !upiTransactionId.trim()
+          ) {
+            toast.error("Please enter UPI Transaction ID");
+            return;
+          }
+
+          if (
+            paymentMethod !== "Cash" &&
+            !paymentVerified
+          ) {
+            toast.error("Please verify the payment.");
+            return;
+          }
+
           setLoading(true);
 
-          await createSubscription(data);
+          await createSubscription({
+            ...data,
+
+            paymentMethod,
+
+            transactionId:
+              paymentMethod === "UPI"
+                ? upiTransactionId.trim().toUpperCase()
+                : null,
+
+          });
 
           toast.success(
             "Subscription created successfully"

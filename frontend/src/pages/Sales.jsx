@@ -196,37 +196,51 @@ onPrint={async (sale) => {
 
 }}
 
-onWhatsapp={(sale)=>{
 
-const phone =
-sale.member.phone.replace(/\D/g,"");
 
-const message =
+onWhatsapp={(sale) => {
+
+  const phone =
+    sale.member.phone.replace(/\D/g, "");
+
+  const purchaseDate = new Date(
+    sale.createdAt
+  ).toLocaleDateString("en-IN", {
+    day: "2-digit",
+    month: "short",
+    year: "numeric",
+  });
+
+  const message =
 `🙏🏻 Dhan Nirankar Ji 🙏🏻
 
 Rev. ${sale.member.fullName} Ji,
 
 Thank you for purchasing from Sant Nirankari Publication, Siliguri.
 
-Invoice No : ${sale.invoiceNo}
+📅 Date : ${purchaseDate}
 
-Amount : ₹${sale.totalAmount}
+🧾 Invoice No : ${sale.invoiceNo}
 
-Payment Method : ${sale.paymentMethod}
+💰 Amount : ₹${sale.totalAmount}
+
+💳 Payment Method : ${sale.paymentMethod}
+${sale.paymentMethod === "UPI"
+  ? `🏦 UPI Transaction ID : ${sale.upiTransactionId}`
+  : ""}
 
 Your purchase has been recorded successfully.
+
+Thank you for your support.
 
 Regards,
 Sant Nirankari Mission
 Siliguri Zone`;
 
-window.open(
-
-`https://wa.me/91${phone}?text=${encodeURIComponent(message)}`,
-
-"_blank"
-
-);
+  window.open(
+    `https://wa.me/91${phone}?text=${encodeURIComponent(message)}`,
+    "_blank"
+  );
 
 }}
 

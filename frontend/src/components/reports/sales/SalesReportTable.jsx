@@ -8,7 +8,7 @@ return(
 
 <div className="bg-white rounded-xl shadow overflow-hidden">
 
-<table className="w-full">
+<table className="w-full text-center">
 
 <thead className="bg-blue-600 text-white">
 
@@ -22,7 +22,6 @@ return(
 
 <th className="p-4">Payment</th>
 
-<th className="p-4">Status</th>
 
 <th className="p-4">Date</th>
 
@@ -60,12 +59,6 @@ className="border-b hover:bg-gray-50"
 <td className="p-4">
 
 {sale.paymentMethod}
-
-</td>
-
-<td className="p-4">
-
-{sale.paymentStatus}
 
 </td>
 

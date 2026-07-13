@@ -33,7 +33,7 @@ function PaymentSection({
         >
           <option value="Cash">Cash</option>
           <option value="UPI">UPI</option>
-          <option value="Card">Card</option>
+          {/* <option value="Card">Card</option> */}
         </select>
       </div>
 

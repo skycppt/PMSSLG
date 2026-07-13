@@ -1,5 +1,6 @@
 import { FaEdit, FaTrash } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 
 function PublicationTable({
   publications,
@@ -8,6 +9,7 @@ function PublicationTable({
 }) {
 
   const navigate = useNavigate();
+
 
   if (publications.length === 0) {
     return (
@@ -91,6 +93,7 @@ function PublicationTable({
                       state: {
                         publication: publication.name,
                         language: publication.language,
+                        status: "Active",
                       },
                     })
                   }
@@ -157,6 +160,16 @@ function PublicationTable({
                 >
                   <FaTrash size={18} />
                 </button>
+
+                {status === "Expiring Soon" && (
+                  <button
+                    onClick={() => onWhatsapp(sub)}
+                    className="text-green-600 hover:text-green-700"
+                    title="Send Renewal Reminder"
+                  >
+                    <FaWhatsapp />
+                  </button>
+                )}
 
               </td>
 

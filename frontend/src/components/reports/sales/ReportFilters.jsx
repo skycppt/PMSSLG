@@ -112,9 +112,9 @@ function ReportFilters({
 
             <option>UPI</option>
 
-            <option>Card</option>
+            {/* <option>Card</option>
 
-            <option>Bank Transfer</option>
+            <option>Bank Transfer</option> */}
 
           </select>
 

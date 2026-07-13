@@ -1,5 +1,6 @@
 import { getSubscriptionStatus } from "../../utils/subscriptionStatus";
 import { useNavigate } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 import {
   FaEye,
   FaSyncAlt,
@@ -10,7 +11,8 @@ function SubscriptionTable({
   subscriptions,
   onRenew,
   onCancel,
-}) {
+  onWhatsapp,
+})  {
 
 
   const navigate = useNavigate();
@@ -214,6 +216,16 @@ function SubscriptionTable({
                     >
                       <FaBan />
                     </button>
+
+                    {status === "Expiring Soon" && (
+                        <button
+                          onClick={() => onWhatsapp(sub)}
+                          className="text-green-500 hover:text-green-700"
+                          title="Send WhatsApp Reminder"
+                        >
+                          <FaWhatsapp />
+                        </button>
+                      )}
 
                   </div>
 

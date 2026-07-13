@@ -72,7 +72,7 @@ function ExpiringSubscriptions({
 
                     <p className="font-medium text-sm sm:text-base">
 
-                      {sub.member.fullName}
+                      {sub.member?.fullName || "Member Not Found"}
 
                     </p>
 
@@ -82,7 +82,7 @@ function ExpiringSubscriptions({
 
                     <p className="text-sm sm:text-base">
 
-                      {sub.publication.name}
+                      {sub.publication?.name || "Publication Not Found"}
 
                     </p>
 
