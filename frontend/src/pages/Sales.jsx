@@ -218,23 +218,21 @@ Rev. ${sale.member.fullName} Ji,
 
 Thank you for purchasing from Sant Nirankari Publication, Siliguri.
 
-📅 Date : ${purchaseDate}
+Date : ${purchaseDate}
 
-🧾 Invoice No : ${sale.invoiceNo}
+Invoice No : ${sale.invoiceNo}
 
-💰 Amount : ₹${sale.totalAmount}
+Amount : ₹${sale.totalAmount}
 
-💳 Payment Method : ${sale.paymentMethod}
+Payment Method : ${sale.paymentMethod}
 ${sale.paymentMethod === "UPI"
-  ? `🏦 UPI Transaction ID : ${sale.upiTransactionId}`
+  ? `UPI Transaction ID : ${sale.upiTransactionId}`
   : ""}
 
 Your purchase has been recorded successfully.
 
-Thank you for your support.
-
 Regards,
-Sant Nirankari Mission
+Sant Nirankari Mandal
 Siliguri Zone`;
 
   window.open(

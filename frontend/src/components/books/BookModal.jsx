@@ -23,13 +23,13 @@ function BookModal({onClose,onBookAdded,book,}){
 
           await updateBook(book._id, data);
 
-          toast.success("Book updated successfully");
+          toast.success("Item updated successfully");
 
         } else {
 
           await createBook(data);
 
-          toast.success("Book added successfully");
+          toast.success("Item added successfully");
 
         }
 
