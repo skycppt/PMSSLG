@@ -115,31 +115,21 @@ export const createBookSale = async (req, res) => {
     // Create Sale
     // -----------------------------
 
-   const sale = await BookSale.create({
-
+   const saleData = {
   invoiceNo,
-
   member: memberId,
-
   totalAmount,
-
   paymentMethod,
-
   paymentStatus,
-
-  upiTransactionId:
-    paymentMethod === "UPI"
-      ? upiTransactionId.trim()
-      : "",
-
-  upiPaymentDate:
-    paymentMethod === "UPI"
-      ? new Date()
-      : null,
-
   soldBy: req.user._id,
+};
 
-});
+if (paymentMethod === "UPI") {
+  saleData.upiTransactionId = upiTransactionId.trim();
+  saleData.upiPaymentDate = new Date();
+}
+
+const sale = await BookSale.create(saleData);
 
     // -----------------------------
     // Save Sale Items

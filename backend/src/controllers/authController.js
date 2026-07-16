@@ -75,12 +75,13 @@ export const loginUser = async (req, res) => {
     });
 
   } catch (error) {
-    console.log(error);
+    console.error("LOGIN ERROR:", error);
 
     res.status(500).json({
-      message: "Server Error",
+        message: "Server Error",
+        error: error.message,
     });
-  }
+}
 };
 
 export const getProfile = async (req, res) => {
