@@ -112,7 +112,7 @@ const handleDelete = (id) => {
   {/* Genre Filter */}
   <div>
     <label className="block text-sm font-semibold mb-2">
-      Select Genre
+      Select type
     </label>
 
     <select
@@ -120,7 +120,7 @@ const handleDelete = (id) => {
       onChange={(e) => setGenreFilter(e.target.value)}
       className="w-full border border-gray-300 rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
     >
-      <option value="">All Genres</option>
+      <option value="">All types</option>
 
       {genres.map((genre) => (
         <option key={genre} value={genre}>
