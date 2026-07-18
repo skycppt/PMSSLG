@@ -9,6 +9,7 @@ import DeleteBookModal from "../components/books/DeleteBookModal";
 import StockModal from "../components/books/StockModal";
 
 
+
 function Books() {
 
   const [books, setBooks] = useState([]);
@@ -16,6 +17,11 @@ function Books() {
   const [showModal, setShowModal] = useState(false);
   const [selectedBook, setSelectedBook] = useState(null);
   const [deleteBookId, setDeleteBookId] = useState(null);
+
+  const [genreFilter, setGenreFilter] = useState("");
+  const [languageFilter, setLanguageFilter] = useState("");
+  
+  
   useEffect(() => {
     fetchBooks();
   }, []);
@@ -33,20 +39,29 @@ function Books() {
   };
 
   const [stockModalOpen, setStockModalOpen] = useState(false);
-  const filteredBooks = books.filter((book) => {
 
+  const genres = [...new Set(books.map((book) => book.genre))];
+  const languages = [...new Set(books.map((book) => book.language))];
+ 
+  const filteredBooks = books.filter((book) => {
   const keyword = search.toLowerCase();
 
-
-  return (
+  const matchesSearch =
     book.title.toLowerCase().includes(keyword) ||
     book.author.toLowerCase().includes(keyword) ||
     book.publisher.toLowerCase().includes(keyword) ||
     book.language.toLowerCase().includes(keyword) ||
-    book.genre.toLowerCase().includes(keyword)
-  );
+    book.genre.toLowerCase().includes(keyword);
 
+  const matchesGenre =
+  genreFilter === "" || book.genre === genreFilter;
+
+  const matchesLanguage =
+    languageFilter === "" || book.language === languageFilter;
+
+  return matchesSearch && matchesGenre && matchesLanguage;
 });
+
   const handleEdit = (book) => {
   setSelectedBook(book);
   setShowModal(true);
@@ -61,7 +76,7 @@ const handleDelete = (id) => {
       <div className="flex justify-between items-center mb-8">
         <div>
         <h1 className="text-3xl font-bold">
-          Books
+          Products
         </h1>
 
         <p className="text-gray-500 mt-1">
@@ -73,7 +88,7 @@ const handleDelete = (id) => {
             onClick={() => setShowModal(true)}
             className="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700"
           >
-            + Add Book
+            + Add Items
         </button>
 
         <button
@@ -84,11 +99,60 @@ const handleDelete = (id) => {
         </button>
 
       </div>
+       
 
       <BookSearch
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+
+
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6 mt-6">
+
+  {/* Genre Filter */}
+  <div>
+    <label className="block text-sm font-semibold mb-2">
+      Select Genre
+    </label>
+
+    <select
+      value={genreFilter}
+      onChange={(e) => setGenreFilter(e.target.value)}
+      className="w-full border border-gray-300 rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">All Genres</option>
+
+      {genres.map((genre) => (
+        <option key={genre} value={genre}>
+          {genre}
+        </option>
+      ))}
+    </select>
+  </div>
+
+  {/* Language Filter */}
+  <div>
+    <label className="block text-sm font-semibold mb-2">
+      Select Language
+    </label>
+
+    <select
+      value={languageFilter}
+      onChange={(e) => setLanguageFilter(e.target.value)}
+      className="w-full border border-gray-300 rounded-xl px-4 py-4 focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">All Languages</option>
+
+      {languages.map((language) => (
+        <option key={language} value={language}>
+          {language}
+        </option>
+      ))}
+    </select>
+  </div>
+
+</div>
+
 
       <BookTable books={filteredBooks} onEdit={handleEdit} onDelete={handleDelete}/>
       {showModal && (

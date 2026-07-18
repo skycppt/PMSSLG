@@ -102,7 +102,7 @@ function BookModal({onClose,onBookAdded,book,}){
             <option value="Bengali">Bengali</option>
             <option value="Punjabi">Punjabi</option>
             <option value="Other">Other</option>
-            <option value="Not Applicable">Not Applicable</option>
+            <option value="NA">NA</option>
 
           </select>
 
@@ -110,13 +110,14 @@ function BookModal({onClose,onBookAdded,book,}){
             {...register("genre", { required: true })}
             className="border rounded-lg p-3 bg-white"
           >
-            <option value="">Select Genre</option>
+            <option value="">Select type</option>
             <option value="Holy Books">Holy Books</option>
             <option value="History">History</option>
             <option value="Ideology">Ideology</option>
             <option value="Children">Children</option>
             <option value="Song">Song and Poem</option>
-            <option value="Merchandise">Merchandise</option>
+            <option value="Merchandise & accessory">Merchandise & accessory</option>
+            <option value="Accessory"> Accessory</option>
             <option value="Magazine">Magazine</option>
             <option value="Other">Other</option>
           </select>

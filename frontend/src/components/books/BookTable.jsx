@@ -22,6 +22,9 @@ function BookTable({
               Author
             </th>
             <th className="text-left p-4">
+              Type
+            </th>
+            <th className="text-left p-4">
               Language
             </th>
 
@@ -61,6 +64,11 @@ function BookTable({
               <td className="p-4">
                 {book.author}
               </td>
+
+              <td className="p-4">
+                {book.genre}
+              </td>
+
               <td className="p-4">
                 {book.language}
               </td>

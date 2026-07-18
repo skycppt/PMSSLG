@@ -92,7 +92,7 @@ className="lg:hidden text-2xl"
           }
         >
           <FaBook />
-            Books
+            Products
         </NavLink>
 
         <NavLink
@@ -146,7 +146,7 @@ className="lg:hidden text-2xl"
           }
         >
           <FaMoneyBill />
-           Book Sales
+           Products Sales
         </NavLink>
 
         

@@ -24,7 +24,7 @@ route,
 
   const cardConfig = {
 
-    Books: {
+    Products: {
 
       icon: <FaBook className="text-3xl text-blue-600" />,
 

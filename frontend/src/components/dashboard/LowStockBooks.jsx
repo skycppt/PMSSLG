@@ -12,13 +12,13 @@ function LowStockBooks({
 
         <h2 className="text-lg sm:text-xl font-semibold">
 
-          Low Stock Books
+          Low Stock
 
         </h2>
 
         <span className="text-sm text-gray-500">
 
-          {books.length} Books
+          {books.length} Products
 
         </span>
 
@@ -34,7 +34,7 @@ function LowStockBooks({
 
               <th className="text-left py-3 text-sm font-semibold">
 
-                Book
+                Product
 
               </th>
 

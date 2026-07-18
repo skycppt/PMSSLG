@@ -283,7 +283,7 @@ Sold By
 
 <h3 className="text-2xl font-semibold mb-5">
 
-Purchased Books
+Purchased Items
 
 </h3>
 

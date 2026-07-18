@@ -12,7 +12,7 @@ return(
 
 <DashboardCard
 
-title="Books"
+title="Products"
 
 value={data.books.totalBooks}
 
